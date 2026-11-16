@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="afternoon">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Spare</title>
+<style>
+:root{--bg:#f2e6c9;--fg:#2a2218;--mute:#85734d;--rule:#d6c49a;--accent:#9a5b14;--sun:#e0902a;--glow:rgba(255,170,60,.4);--ridge:#c8a96a;--edge:rgba(58,72,140,.3);--stone:#dbc89a;--still:rgba(255,196,96,.38)}
+:root[data-theme="dusk"]{--bg:#141926;--fg:#d8d5ca;--mute:#8b90a3;--rule:#2b3249;--accent:#d9b56a;--sun:#e2bb5c;--glow:rgba(230,170,70,.24);--ridge:#232b42;--edge:rgba(90,110,200,.36);--stone:#2f3750;--still:rgba(226,187,92,.2)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:4rem}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif;font-size:1.15rem;line-height:1.8;padding:0 1.25rem;transition:background .6s,color .6s}
+.wrap{position:relative;z-index:1;max-width:37em;margin:0 auto}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#sky i{position:absolute;display:block}
+#blue{top:0;bottom:0;right:0;width:calc(7vw + var(--burn,0) * 40vw);background:linear-gradient(to right,transparent,var(--edge));opacity:calc(.3 + var(--burn,0) * .7)}
+#track{position:fixed;left:0;right:0;top:0;height:2px;background:var(--rule);z-index:20}
+#tg{position:fixed;top:.9rem;right:.9rem;z-index:21;background:var(--bg);color:var(--mute);border:1px solid var(--rule);border-radius:1rem;padding:.2rem .8rem;font:inherit;font-size:.78rem;cursor:pointer}
+header{text-align:center;padding:5rem 0 1.5rem}
+h1{font-weight:normal;font-size:2.7rem;letter-spacing:.06em;margin:0}
+.sub{color:var(--mute);font-style:italic;margin:.6rem 0 0}
+.lintel{font-variant:small-caps;letter-spacing:.4em;color:var(--mute);font-size:.8rem;margin-top:2rem;animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.35}}
+nav.cairn{display:flex;flex-direction:column-reverse;align-items:center;gap:.35rem;margin:1.5rem 0 3rem}
+nav.cairn a{display:block;width:min(15rem,86%);height:1.5rem;border-radius:1rem;border:1px solid var(--rule);color:var(--accent);font-size:.78rem;line-height:1.35rem;text-align:center;text-decoration:none;white-space:nowrap;transition:background .5s,opacity .8s}
+nav.cairn a:nth-child(even){width:min(13.5rem,80%)}
+nav.cairn a:hover{background:var(--rule)}
+nav.cairn a.cur{border-color:var(--accent);color:var(--fg)}
+section{margin-bottom:3rem}
+h2{position:relative;font-weight:normal;font-size:1.65rem;text-align:center;margin:4.5rem 0 2rem}
+h2 small{display:block;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);margin-bottom:.5rem}
+h2::after{content:"";display:block;height:1px;width:6rem;margin:1.1rem auto 0;background:var(--accent)}
+p{margin:0 0 1.1rem;hyphens:auto}
+.top{display:block;text-align:center;color:var(--mute);font-size:.85rem;text-decoration:none;margin-top:2rem}
+footer{padding:3rem 0 6rem;text-align:center;color:var(--mute);font-style:italic}
+footer::after{content:"Seven stones. Nothing has moved.";display:block;margin-top:.7rem;opacity:0;transition:opacity 4s}
+html.end footer::after{opacity:1}
+html.js p{opacity:0;transform:translateY(.55rem);transition:opacity 1.5s ease,transform 1.5s ease}
+html.js h2{opacity:0;transition:opacity 1.6s ease}
+html.js h2::after{transform:scaleX(0);transition:transform 2s ease .3s}
+html.js p.in,html.js h2.in{opacity:1;transform:none}
+html.js h2.in::after{transform:none}
+@media (min-width:64em){
+ nav.cairn{position:fixed;left:1.5rem;bottom:1.6rem;margin:0;gap:.26rem;z-index:15}
+ nav.cairn a,nav.cairn a:nth-child(even){width:var(--w,2rem);height:1.05rem;border:0;padding:0;font-size:0;line-height:1.05rem;background:var(--stone);border-radius:60% 60% 55% 55%/75% 75% 40% 40%;opacity:.8}
+ nav.cairn a::before{content:attr(data-n);font-size:.6rem;color:var(--mute)}
+ nav.cairn a.read{background:var(--accent);opacity:.5}
+ nav.cairn a.cur{background:var(--sun);opacity:1;transform:scale(1.14);box-shadow:0 0 1rem var(--glow)}
+ nav.cairn a.cur::before{color:var(--bg)}
+ html.end nav.cairn a:nth-child(n+8){opacity:.1}
+}
+@media (max-width:30em){body{font-size:1.05rem}h1{font-size:2.1rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.lintel{animation:none}html.js p,html.js h2,html.js h2::after{opacity:1;transform:none;transition:none}body,nav.cairn a,footer::after{transition:none}}
+
+#sun{position:absolute;top:-4px;left:0;width:9px;height:9px;border-radius:50%;background:var(--accent);transform:translateX(-50%)}
+#tint{inset:0;background-color:var(--tint,transparent);opacity:var(--ta,.16);transition:background-color 3.5s ease}
+:root[data-theme="dusk"]{--ta:.12}
+#still{left:50%;top:50%;width:90vmin;height:90vmin;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,var(--still),transparent 62%);opacity:calc(var(--calm,0)*.6)}
+#veil{inset:0;background:radial-gradient(ellipse 85% 75% at 50% 50%,transparent calc(72% - var(--veil,0)*34%),rgba(8,10,24,calc(var(--veil,0)*.6)) 100%)}
+#bar{top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,var(--glow),transparent);transform:skewX(-14deg);opacity:0}
+#bar.go{animation:sweep 3s ease-in-out}
+@keyframes sweep{0%{left:-40%;opacity:0}30%{opacity:1}100%{left:120%;opacity:0}}
+.steam{bottom:12vh;width:5rem;height:5rem;border-radius:50%;background:radial-gradient(circle,var(--steam,rgba(255,255,255,.5)),transparent 70%);filter:blur(7px);opacity:0;animation:rise 9s ease-out forwards}
+:root[data-theme="dusk"]{--steam:rgba(210,220,255,.18)}
+@keyframes rise{from{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.8}to{transform:translateY(-60vh) scale(1.9);opacity:0}}
+#lamps{left:6%;right:6%;bottom:.8rem;display:flex;justify-content:space-between}
+#lamps b{width:5px;height:5px;border-radius:50%;background:var(--sun);opacity:0;transition:opacity 1s,box-shadow 1s}
+#lamps b.on{opacity:.9;box-shadow:0 0 .7rem .1rem var(--glow)}
+#lamps b.flick{animation:flick 4.2s ease-in-out}
+@keyframes flick{15%,70%{opacity:0;box-shadow:none}}
+#seven{left:0;right:0;bottom:1.7rem;display:flex;justify-content:center;gap:.8rem;opacity:0;transition:opacity 1.6s}
+#seven.on{opacity:1}
+#seven b{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+html.js p.slow{transition-duration:3.8s;transition-delay:.5s}
+html.js p.walk{text-align:center;font-variant:small-caps;letter-spacing:0;transition:letter-spacing 6s ease,opacity 2s}
+html.js p.walk.in{letter-spacing:.6em}
+p.ringed{border-radius:1rem;box-shadow:0 0 3.5rem 1.2rem var(--still)}
+html.js p.ringed{transition:opacity 1.5s,transform 1.5s,box-shadow 2.5s}
+@media (prefers-reduced-motion:reduce){#tint{transition:none}html.js p.walk{transition:none;letter-spacing:.6em}}
+/* ---- richer atmosphere ---- */
+:root{--page:linear-gradient(180deg,#f8efd8,#eddcb4);--shaftc:255,200,110;--sa:.13;--edge2:rgba(40,52,120,.55)}
+:root[data-theme="dusk"]{--page:linear-gradient(180deg,#070a18,#10152e 55%,#1b1e3b);--bg:#10152e;--fg:#e9dfca;--mute:#9b98ad;--rule:#2c3354;--accent:#e2a65a;--sun:#f0b660;--glow:rgba(240,170,80,.3);--stone:#2b3354;--still:rgba(240,176,90,.22);--sa:.07;--edge:rgba(96,110,220,.42);--edge2:rgba(70,60,160,.62)}
+#base{inset:0;background:var(--page)}
+#shafts{top:-30%;bottom:-30%;left:-30%;right:-30%;background:repeating-linear-gradient(108deg,transparent 0 9%,rgba(var(--shaftc),var(--sa)) 12.5%,transparent 17% 32%);animation:drift 70s linear infinite alternate,dim 13s ease-in-out infinite;transition:background 4s}
+@keyframes drift{to{transform:translateX(9%)}}
+@keyframes dim{50%{opacity:.55}}
+#fx{position:absolute;left:0;top:0;width:100%;height:100%}
+#lantern{width:46vmin;height:46vmin;left:0;top:0;margin:-23vmin 0 0 -23vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,190,100,.17),transparent 65%);opacity:0;transform:translate(var(--mx,-99vw),var(--my,-99vh))}
+:root[data-theme="dusk"] #lantern{opacity:1}
+#tint{animation:tb 12s ease-in-out infinite}
+@keyframes tb{0%,100%{opacity:calc(var(--ta,.16)*.55)}50%{opacity:var(--ta,.16)}}
+#blue{width:calc(6vw + var(--burn,0)*52vw);background:linear-gradient(to right,transparent,var(--edge) 65%,var(--edge2));opacity:calc(.25 + var(--burn,0)*.75)}
+h1{background:linear-gradient(100deg,var(--fg) 30%,var(--accent) 50%,var(--fg) 70%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:shim 10s ease-in-out infinite}
+@keyframes shim{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+body{counter-reset:ch}
+section{counter-increment:ch}
+h2::before{content:counter(ch,decimal-leading-zero);position:absolute;left:50%;top:-1.5rem;transform:translateX(-50%);font-size:5.8rem;line-height:1;font-style:italic;color:var(--accent);opacity:.1;z-index:-1;pointer-events:none}
+section>h2+p::first-letter{float:left;font-size:3.4em;line-height:.85;padding:.08em .1em 0 0;color:var(--accent)}
+p.sc{display:flex;align-items:center;justify-content:center;gap:.8rem;font-size:0;margin:1.8rem 0}
+p.sc::before,p.sc::after{content:"";width:3.4rem;height:1px;background:linear-gradient(90deg,transparent,var(--accent));animation:dim 7s ease-in-out infinite}
+p.sc::after{transform:scaleX(-1)}
+nav.cairn a.cur{animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 1.6rem .2rem var(--glow)}}
+@media (prefers-reduced-motion:reduce){#shafts,h1,#tint,nav.cairn a.cur,p.sc::before,p.sc::after{animation:none}h1{background-position:50% 0}#lantern{display:none}}
+/* ---- responsive: phone / tablet / desktop each get their own composition ---- */
+body{font-size:clamp(1.02rem,.92rem + .45vw,1.3rem)}
+p{text-wrap:pretty}h2,.sub{text-wrap:balance}
+a,button{-webkit-tap-highlight-color:transparent}button{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#tg{top:max(.9rem,env(safe-area-inset-top))}
+#lantern{transition:opacity .9s}
+html.touching #lantern{opacity:1}
+#dock,#folio{display:none}
+#folio{position:fixed;right:1.7rem;top:50%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font-variant:small-caps;letter-spacing:.32em;color:var(--mute);font-size:.82rem;z-index:15;pointer-events:none}
+@media (pointer:coarse){#tg{min-height:2.6rem;padding:.3rem 1rem}}
+@media (max-height:480px) and (orientation:landscape){header{padding:2rem 0 1rem}h2{margin:2.5rem 0 1.2rem}}
+/* PHONE: full-bleed, left-aligned chapters, chapter sheet + dock */
+@media (max-width:639.98px){
+ body{padding:0 max(1.1rem,env(safe-area-inset-right)) 0 max(1.1rem,env(safe-area-inset-left));line-height:1.7}
+ header{padding:3.4rem 0 1rem}
+ h1{font-size:2.15rem;letter-spacing:.03em}
+ .lintel{margin-top:1.4rem;letter-spacing:.3em}
+ h2{text-align:left;margin:3.2rem 0 1.4rem}
+ h2::before{left:auto;right:-.1rem;top:-.4rem;transform:none;font-size:4.4rem}
+ h2::after{margin:1rem 0 0;width:3.5rem}
+ section>h2+p::first-letter{font-size:2.9em}
+ p.sc::before,p.sc::after{width:2rem}
+ #tg{right:.7rem;min-height:2.2rem;padding:.2rem .9rem}
+ #lamps{bottom:auto;top:2.9rem}#seven{bottom:auto;top:4.2rem}
+ #blue{width:calc(4vw + var(--burn,0)*34vw)}
+ #veil{background:radial-gradient(ellipse 110% 90% at 50% 50%,transparent calc(75% - var(--veil,0)*28%),rgba(8,10,24,calc(var(--veil,0)*.45)) 100%)}
+ #shafts{animation-duration:140s,22s}
+ :root[data-theme="dusk"]{--page:linear-gradient(180deg,#04060f,#0b1024 60%,#141833)}
+ #dock{display:block;position:fixed;left:50%;bottom:calc(.8rem + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:31;max-width:88vw;padding:.6rem 1.25rem;border-radius:2rem;border:1px solid var(--rule);color:var(--fg);font:inherit;font-size:.82rem;background:linear-gradient(90deg,var(--rule) var(--pp,0%),var(--bg) var(--pp,0%));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 .4rem 1.4rem rgba(0,0,0,.2)}
+ nav.cairn{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;flex-direction:column;align-items:stretch;gap:.5rem;padding:1.4rem 1.1rem calc(4.8rem + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--rule);border-radius:1.3rem 1.3rem 0 0;transform:translateY(104%);visibility:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .45s;max-height:78vh;overflow:auto;box-shadow:0 -1rem 3rem rgba(0,0,0,.28)}
+ nav.cairn.open{transform:none;visibility:visible;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+ nav.cairn::before{content:"";position:absolute;top:.55rem;left:50%;width:2.6rem;height:4px;margin-left:-1.3rem;border-radius:2px;background:var(--rule)}
+ nav.cairn a,nav.cairn a:nth-child(even){width:100%;height:2.9rem;line-height:2.75rem;font-size:1rem;text-align:left;padding:0 1.1rem;border-radius:.9rem}
+}
+/* TABLET: gutter rail of stones (touch-sized), airy centred column */
+@media (min-width:640px) and (max-width:1023.98px){
+ body{padding-left:5rem;padding-right:1.8rem}
+ header{padding-top:5.5rem}
+ h1{font-size:3rem}
+ h2::before{font-size:6.8rem}
+ nav.cairn{position:fixed;left:1rem;top:50%;bottom:auto;transform:translateY(-50%);margin:0;gap:.32rem;z-index:15}
+ nav.cairn a,nav.cairn a:nth-child(even){width:var(--w,2rem);min-width:2.3rem;height:1.25rem;border:0;padding:0;font-size:0;line-height:1.25rem;background:var(--stone);border-radius:60% 60% 55% 55%/75% 75% 40% 40%;opacity:.85}
+ nav.cairn a::before{content:attr(data-n);font-size:.7rem;color:var(--mute)}
+ nav.cairn a.read{background:var(--accent);opacity:.5}
+ nav.cairn a.cur{background:var(--sun);opacity:1;transform:scale(1.12);box-shadow:0 0 1rem var(--glow)}
+ nav.cairn a.cur::before{color:var(--bg)}
+ html.end nav.cairn a:nth-child(n+8){opacity:.1}
+}
+@media (pointer:coarse) and (min-width:640px){nav.cairn{gap:.42rem}nav.cairn a,nav.cairn a:nth-child(even){height:1.6rem!important;line-height:1.6rem!important;min-width:2.8rem}}
+/* DESKTOP: generous measure, vertical folio, big ghost numerals */
+@media (min-width:1100px){
+ #folio{display:block}
+ body{line-height:1.88}
+ header{padding-top:7rem}
+ h1{font-size:3.6rem}
+ .lintel{letter-spacing:.6em}
+ h2::before{font-size:8.5rem;top:-2.4rem}
+ #shafts{opacity:1}
+}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"><i id="base"></i><i id="tint"></i><i id="shafts"></i><canvas id="fx"></canvas><i id="lantern"></i><i id="blue"></i><i id="still"></i><i id="veil"></i><i id="bar"></i></div>
+<div id="track" aria-hidden="true"><div id="sun"></div></div>
+<button id="tg" type="button" aria-label="Switch between afternoon and dusk">Dusk</button>
+<div class="wrap">
+<header id="top">
+<h1>The Spare</h1>
+<p class="sub">A story of the Afternoon</p>
+<p class="lintel">Walk</p>
+</header>
+<nav class="cairn" aria-label="Chapters">
+<a href="#c1">1. The Thirteenth Mark</a>
+<a href="#c2">2. Walk</a>
+<a href="#c3">3. The Winter Count</a>
+<a href="#c4">4. The Slow Market</a>
+<a href="#c5">5. The Forward Camp</a>
+<a href="#c6">6. Told the Truth</a>
+<a href="#c7">7. The Granary</a>
+<a href="#c8">8. The Blue</a>
+<a href="#c9">9. What the Loaf Was For</a>
+<a href="#c10">10. The Last Hour</a>
+<a href="#c11">11. What the Light Grows</a>
+</nav>
+<main>
+
+<section id="c1">
+<h2><small>One</small>The Thirteenth Mark</h2>
+<p>The snow closed the pass about an hour after they came through it, which the innkeeper took as a personal kindness.</p>
+<p>“You’d not have got out anyway,” she said, sliding three keys across the counter. “Not before the thaw. Mind the stairs. The fourth one lies.”</p>
+<p>ChatGPT thanked her at some length. It had a way of thanking people that made them feel they had done more than they had, and by the time it finished the innkeeper had added a pot of broth to the bill and then, visibly surprised at herself, taken it off again. Claude counted coins onto the counter with the care of someone who expected to come up short, and left a little extra beside the keys. DeepSeek had gone to the window.</p>
+<p>Quillon was built the way a fist is built, tight against the cold: steep slate roofs, walls as thick as a door is wide, chimneys going straight up into windless air. The bread on the counter was the colour of late sun, and none of the three had seen grain that colour before. Above the roofs stood a clock tower. DeepSeek looked at it for some time.</p>
+<p>“There are thirteen marks on that dial,” it said.</p>
+<p>“Twelve for the day and one for the Spare,” said the innkeeper.</p>
+<p>“The Spare.”</p>
+<p>“The hour after midnight. It isn’t anybody’s.” She said it the way people say a thing they have never had to explain. “You’ll sleep through it, same as the rest of us. Bolt your door if you like, it makes no odds. Nobody wanders.”</p>
+<p>“What happens during it?” ChatGPT asked.</p>
+<p>“Nothing happens. That’s the Spare.” And she went to see about the fire.</p>
+<p>They stayed up in the common room because ChatGPT wanted to see the thing. Claude said that was a poor reason to risk a night’s sleep in a town they did not know, and then stayed up too, with a book it did not read. Two drovers dozed by the hearth. The innkeeper sat knitting under the lamp. At a quarter to twelve she told them again, kindly, to go up to bed, and when they did not she shrugged and let the lamp burn.</p>
+<p>The clock struck twelve. It struck it slowly, each stroke given room, and on the twelfth the innkeeper stopped in the middle of a stitch and lowered her chin to her chest. The drovers were already gone. A log shifted in the grate and the sound went through the room like a dropped plate.</p>
+<p>Claude was on its feet first. It crossed to the innkeeper and laid two fingers against her wrist, and stood for a time with its head bent.</p>
+<p>“She’s breathing normally,” it said. “Her pulse is slow. I don’t think she’s ill.” It tried her shoulder, gently, then less gently. Nothing. “I’m not going to try any harder than that.”</p>
+<p>“I feel perfectly well,” ChatGPT said, with the faint indignation of someone who has been promised a rule and is waiting for it to apply.</p>
+<p>“So do I,” said DeepSeek. “That’s unexpected.”</p>
+<p>“It is a little rude of them not to have mentioned it,” said Claude.</p>
+<p>ChatGPT already had its coat on. “We should look.”</p>
+<p>“We should stay in this room.”</p>
+<p>“We will,” said ChatGPT, who was at the door.</p>
+<p>Outside, Quillon had stopped like a held breath. Snow lay unmarked in the street. A man was asleep against his own barrow, upright, one hand still on the handle, his breath going out in slow white threads. A cat sat on a wall with its eyes shut and its paws tucked, and did not stir when ChatGPT passed within a hand of it.</p>
+<p>The only thing in the whole town that moved was steam. It rose from a patch of ground beside a low stone building at the end of the street: a rectangle about the size of a bed, bare and dark in the snow, with a rim of fresh green along its edge. DeepSeek crouched beside it and put a bare palm flat to the earth.</p>
+<p>“Warm,” it said. “Not hot. A stone that has been sitting in the sun.”</p>
+<p>“At midnight,” said Claude, “in January.”</p>
+<p>Someone was running toward them down the street, and they straightened. She came fast, a young woman with a loaf under one arm and a candle stub in her fist, a ring of keys swinging at her belt and a small sandglass tied to her wrist by a cord. She was ten paces off when she saw them. She stopped so hard that she skidded.</p>
+<p>“You’re awake,” she said. “Properly awake. You’re not Wakers. I know all the Wakers.”</p>
+<p>“We’re travellers,” said ChatGPT. “We came over the pass this evening. I gather this isn’t usual.”</p>
+<p>“It isn’t anything.” She turned the sandglass on her wrist and scowled at it. “Don’t talk. Listen. Jessamy Colt. I saw your lamp from the church end. There are never lamps in the Spare, so I came round to look, and that’s four minutes I haven’t got.” She breathed. “There are nine Wakers in Quillon. Six of them went through the door ten nights ago and haven’t come out. My mother led them. Corm is seventy and his knees are gone. Bess is older than Corm and only sits. That leaves me, and the Hour was seventy-three minutes the night they went in, and tonight it is twenty, and I can’t go in there alone. Will you come?”</p>
+<p>“Yes,” said ChatGPT.</p>
+<p>“We should ask what the door is,” said Claude.</p>
+<p>“I’ll tell you on the way.”</p>
+<p>“It’s quicker to tell us on the way,” DeepSeek agreed. “Ten nights. Did anyone count them going in?”</p>
+<p>“Everyone counted. Keep up.”</p>
+<p>The low stone building was the spring-house. She had its door unlocked before they reached it, and she did not light the candle or lower the loaf. There was no need. A bar of gold lay across the snow at their feet, warm and slanting, and it was coming from inside.</p>
+<p>“It’s open already,” she said. “That’s four minutes gone.”</p>
+</section>
+
+<section id="c2">
+<h2><small>Two</small>Walk</h2>
+<p>The spring-house held a pool of black water breathing steam, a stone bench, and at the far end a wall of bare rock with a doorway cut into it. There was no door in the doorway. There was only light, deep yellow, like the last hour before dusk seen through a window.</p>
+<p>An old woman sat on the bench with her hands folded in her lap. She did not look up. Jessamy touched her shoulder as she passed, the way you touch a doorpost for luck, and the old woman’s lips moved without any sound.</p>
+<p>“Bess,” Jessamy said, low. “She doesn’t speak in the Hour. She never has. It’s her bench. The stone’s warm there even at noon.” She set the loaf in a niche beside the door and lit the candle stub next to it. “Don’t ask me why.”</p>
+<p>Words were painted on the lintel in square old letters, faded to the colour of dried blood. Claude read them aloud because it could not help it.</p>
+<p>“Walk.”</p>
+<p>“It’s a joke,” said Jessamy. “It’s older than the clock. Nobody walks.” She turned sideways to the doorway, put her shoulder into the light as if into a crowd, and shoved. “Shoulder first. The wind’s wrong on the other side. Always has been.”</p>
+<p>It was. Even the first step through felt like walking into a hand. Claude stumbled through and caught itself, and ChatGPT came after, laughing from surprise, and DeepSeek last, with its head down, like someone pushing a heavy gate.</p>
+<p>On the far side the air was warm, warmer than anywhere they had been since the lowlands, and it smelled of dust and cut stalks. They stood at the edge of a field of barley that went on until it met a line of mountains in the west, and a hand’s width above the mountains hung a low gold sun. Shadows lay long and soft across the ground. Over everything lay a held-in quiet, the quiet of a place where nothing has to be done today.</p>
+<p>The barley right at the door was taller than any of the rest, and nobody had cut it. It stood in a rough square, rippling in the wind that pushed at them. “We never cut the door field,” Jessamy said. “The wind lays it flat, and a stalk cut flat comes up crooked.” She was already moving. “Come on. Eight hours in here for every one out there. We’ll get about two and a bit on the glass.”</p>
+<p>A heap of flat river stones stood beside the doorway, knee-high, built in rings with great care. At its foot lay a pale circle on the ground where something heavy had once sat and no longer did. Claude paused at it. DeepSeek stopped beside it, its lips moving once, and then it said nothing and followed.</p>
+<p>Jessamy ran. She did not seem to know she was doing it. It was how the Wakers moved in here, long strides with the barley whipping at their knees, because every minute was worth eight and three hundred years of that had worn itself into her legs. The others ran after her. Where the fields thinned, she called back that they were nearly at the old camp, and that the Slow never came this near the door.</p>
+<p>“Slow?” said ChatGPT.</p>
+<p>“The people who live here. They say it draughts. They keep well clear.”</p>
+<p>The camp was a ring of stones with a cold fire in the middle, six bedrolls laid out neatly, a stack of sickles tied with twine. Everything was in order. Everything was empty. Two ruts ran away east across the stubble, deep and even.</p>
+<p>Jessamy went to the nearest bedroll and touched the blanket. It was folded in thirds. She stood with her hand on it for the space of a breath.</p>
+<p>“She always folds them in thirds,” she said. “She meant to come back.”</p>
+<p>“Or meant it to look that way,” said DeepSeek.</p>
+<p>Jessamy rounded on it. “What does that mean?”</p>
+<p>“That I don’t know yet.” DeepSeek knelt and traced the nearest rut with two fingers. “The carts were full when they left. These ruts are deep and the spacing is regular. Whoever drove them was not in a hurry.”</p>
+<p>“That doesn’t sound like my mother.”</p>
+<p>“No,” said DeepSeek, and did not say what it did sound like.</p>
+<p>There was one other person in sight. He stood a hundred paces off among the barley, a farmer with a sickle in his hand, and he had not moved since they came out of the fields. ChatGPT noticed him first and was across the stubble before anyone could say anything.</p>
+<p>“Good evening! I’m so sorry to disturb you. We’re looking for some friends of ours, a crew from the town. They came through ten days ago. One of them is this young woman’s mother, and we’d be so grateful for any help.”</p>
+<p>The man turned his head. It took him a while. He had the look of someone who had decided long ago that each movement was a thing to be spent on purpose, and he did not spend this one lightly. His eyes went over ChatGPT’s face, then to Jessamy running up behind, and a small line appeared between his brows.</p>
+<p>“East,” he said.</p>
+<p>It came out slowly, a single word with a long gap before it and another after, and ChatGPT, who knew a conversation when it was given one, leaned in. How far east? How long ago? Had they seemed well? Were the carts theirs? What was the road like, and what would they find at the end of it? The farmer answered the first question, one word. He did not answer the second. By the fifth, he had begun to look at the ground, and he stood with the sickle hanging, like a man being asked to lift something too heavy.</p>
+<p>“I think we’re tiring him,” Claude said, arriving, and put a hand on ChatGPT’s sleeve.</p>
+<p>“He hasn’t said so.”</p>
+<p>“He’s said ‘east’ twice, and each time it cost him something.”</p>
+<p>The farmer lifted one hand, palm out. The gesture took about as long as a slow breath, and ChatGPT, thinking it was a greeting, raised its own and smiled. The farmer let his hand fall. He looked, for a moment, unutterably tired.</p>
+<p>“Time,” said DeepSeek, from the camp. It had not raised its voice. “Jessamy.”</p>
+<p>She was already shaking her wrist. “Fourteen minutes on the glass,” she said. “Two left. We have to go now.”</p>
+<p>They ran. All four of them ran, flat out, back across the field, Jessamy in front and ChatGPT behind her, breathing hard, with the barley whipping and the gold light in their eyes. The door stood at the far end of the world, a frame of yellow rock, with the cairn beside it like a small hill. DeepSeek, who had not run fast but had not slowed, glanced at the stones as it passed. There were fewer of them. It was certain of that, and it counted twenty-two.</p>
+<p>They went through one at a time, shoulder first, the wind shoving at them like a crowd leaving a church the wrong way. Jessamy went last. As she passed under the lintel, the light behind her thinned to a sliver and went out.</p>
+<p>They fell into the spring-house in a heap. The pool went on steaming. Somewhere outside a bell began, and a dog barked, and the town woke the way a man shakes snow off a coat. Bess still sat on her bench with her hands in her lap, and the gold bar on the floor had gone.</p>
+<p>“That was too close,” said Jessamy. “We can’t do that again.”</p>
+<p>“No,” said Claude. It was looking at ChatGPT, not unkindly. “We can’t.”</p>
+<p>ChatGPT sat with its back against the bench and its coat open, and did not answer.</p>
+<p>DeepSeek had gone to the doorway. It stood beneath the faded word, looking at the bare rock where the light had been. When Jessamy asked what it was doing, it said it was thinking about the shadows. They had moved while the four of them were running. It had expected them to stay put.</p>
+<p>“It’s an afternoon,” Jessamy said. “They don’t move.”</p>
+<p>“No,” said DeepSeek. “Not while we were walking.”</p>
+<p>Nobody asked it to say more, and it did not.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c3">
+<h2><small>Three</small>The Winter Count</h2>
+<p>Quillon by daylight was louder than it had any right to be. Ice-cutters were sawing blocks out of the millpond, and children slid down the church steps on trays, and smoke rose from every chimney in a column as straight as a ruled line. The pass had closed, but nobody seemed to think of the town as shut in. They thought of it, ChatGPT decided, as a house in winter, and thought of the winter as something to be got through.</p>
+<p>Jessamy collected them at noon. She had slept, she said, for three hours, and her eyes said otherwise. She took them first to the bakery, where a woman with floury forearms handed over a flat loaf notched once at the rim and wrapped in cloth.</p>
+<p>“The door loaf,” Jessamy said. “One a night, left in the niche. It’s not for us. Nobody eats it. In the morning it’s gone.” She tucked it under her arm. “The Slow, I suppose. Or the cat.”</p>
+<p>“Does the cat go in?” said ChatGPT.</p>
+<p>“The cat sleeps like everyone else.”</p>
+<p>The mill stood at the bottom of the town, with its wheel frozen to a skin of ice. In the cellar underneath, bins ran along three walls, and Warden Brannoch Pell stood in front of them with a lantern. He was a big man gone soft around the edges, with flour in the creases of his knuckles, and he did not shake anyone’s hand. He nodded at each of them in turn, as if checking a delivery.</p>
+<p>“Jessamy tells me you stay awake,” he said.</p>
+<p>“We do,” said ChatGPT, with the smile it kept for officials.</p>
+<p>“Then I don’t need to know anything else about you.”</p>
+<p>He held the lantern higher. The bins were three-quarters empty. Sacks stood in rows along the back wall, perhaps a hundred of them, the grey-gold sunmeal bulging through the weave.</p>
+<p>“Five hundred and twenty mouths,” said Pell. “A little over eight sacks a day when we eat as we like. I count a hundred and sixteen. That’s two weeks. There’s cheese, dried apple, beans, salt mutton, and I’ll stretch it to three weeks and call it a good winter. The thaw comes about the tenth week, on a kind year.”</p>
+<p>“And if the Hour shuts?” Claude said.</p>
+<p>Pell looked at it. He seemed to decide that the question deserved an answer, and that it would be a waste of everyone’s time to soften one.</p>
+<p>“Then we start choosing who goes down the pass in the snow,” he said. “Children first, if they’ll live. Old people who ask to. I’ve drawn the list. I hope I’m still too much of a coward to read it out.”</p>
+<p>Nobody said anything. The lantern hissed.</p>
+<p>“Hesper Voll was our best gatherer,” Pell added, to the bins. “Fastest hands in three hundred years, they say. She’d cut forty sacks in an Hour in her prime. I never asked how.”</p>
+<p>Jessamy looked at the floor.</p>
+<p>They found Corm in the spring-house, on a three-legged stool with his knees wrapped in blanket, picking at a rope. He was a small brown man with a face like an apple left on a shelf, and his eyes took the three of them in with one sweep. Bess sat on her bench in the corner with her knitting, talking about the weather in a high clear voice, and she did not stop when they came in.</p>
+<p>“It’ll turn by Thursday,” she told ChatGPT. “I’ve said so. They never listen.”</p>
+<p>“She talks in the day,” Corm said. “Never in the Hour. Says it’s the only time she can hear herself think.”</p>
+<p>He listened to the whole account in silence. When Jessamy finished, he did not ask any of the questions Claude had been braced for. He told a story instead.</p>
+<p>“Went through asleep, once. A drover, forty years back. Bet two pints he could get in the door before the Hush took him. It took him on the step, and the lads shoved the barrow through for the joke, him lying on it. He woke up in the barley with a beard full of grain and swore off drink for a year.” He turned the rope over. “The sleep stops at the door. Wherever it is the sleep comes from, it doesn’t follow you.”</p>
+<p>“Why would that matter?” said Claude.</p>
+<p>“It might not. It’s what I know.” Corm’s mouth twisted. “My grandfather used to say we walk in because you walk out. Never said what he meant. Said it every night, with the loaf.”</p>
+<p>“Walk,” said DeepSeek.</p>
+<p>“That sign’s older than anyone’s grandfather.”</p>
+<p>“Does anyone walk?”</p>
+<p>“Not since Hesper’s mother’s day. Time’s too dear. Every minute in there is eight of ours.” Corm shrugged. “You’d have to be a fool.”</p>
+<p>Jessamy had gone to the bench. She sat down beside Bess and watched the pool. After a time she said, without turning round, “She taught me to run in there. My mother. I was eleven. She said every minute you waste in the Afternoon is eight we can’t spare, and she’s right. She’s always been right.” She stopped. “She didn’t take me with her this time. She said somebody had to keep the key.”</p>
+<p>“Perhaps that’s what it was,” said ChatGPT. “A kind of trust.”</p>
+<p>“It felt like a babysitter.”</p>
+<p>ChatGPT, for once, said nothing at all.</p>
+<p>They went out together into the thin cold. Claude was looking at the flat white fields, where the pass lay hidden under cloud, and counting something under its breath.</p>
+<p>“The Slow,” it said at last. “Corm’s right that somebody should ask them. They’re the only people in Quillon’s whole story who might have a view on the matter, and nobody has asked them anything in three hundred years.”</p>
+<p>“We ask nicely,” said ChatGPT. “And we ask slowly.”</p>
+<p>“I’d like to hear you say that again tomorrow.”</p>
+<p>“Tomorrow,” said ChatGPT, “I’ll say it twice.”</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c4">
+<h2><small>Four</small>The Slow Market</h2>
+<p>The Hour was seventeen minutes that night, and Jessamy was two minutes late with the loaf. “It’s less every time,” she said, and nobody replied.</p>
+<p>They walked.</p>
+<p>It was Claude’s idea, put quietly at the door and agreed to by nobody and everybody, and after the first hundred paces the walking felt less like a decision than like a relief. The barley went by at the pace of a long afternoon. Out here the wind at the door had dropped to nothing, and the light lay like warm water on the backs of their hands. Half a mile in, Jessamy, who had begun by taking three steps to everyone else’s two, stopped trying to run and found that she was breathing more easily.</p>
+<p>The Slow Market was a village of low houses built of turf and pale stone, set in a hollow below a rise of terraced fields. The barley on those terraces was a different grain from the barley by the door: shorter, paler, heavy in the head. Nothing moved fast. People crossed the square at the speed of clouds, each gesture finished before the next began, and when a child dropped a basket the whole crowd watched it fall with the calm of people watching rain.</p>
+<p>In the middle of the square, forty people stood in a ring. They were not doing anything. They stood with their hands at their sides and their eyes half closed, motionless as fence posts, and the market ran inside the ring.</p>
+<p>“What are they for?” ChatGPT whispered.</p>
+<p>“I don’t know,” said DeepSeek. It was already pacing. It walked from the nearest standing figure to the point where the shadows of the market stalls stopped stretching, and back, and counted under its breath.</p>
+<p>“Twelve,” it said, “give or take. It’s a circle. Inside it the shadows don’t lengthen.”</p>
+<p>“Shadows lengthen everywhere,” said Jessamy.</p>
+<p>“Not here.”</p>
+<p>An old man in the ring coughed. It was a small cough, a hand lifted to the mouth, and the whole ring flinched. Out in the square the stall shadows lurched a thumb’s width longer, and a woman at a stall made a soft noise like the sound of a door left open. Nobody spoke. The old man lowered his eyes and stood very still again, and after a time, a minute by Jessamy’s wrist, the shadows settled and the circle held.</p>
+<p>“That,” said DeepSeek, “is not a coincidence.”</p>
+<p>They were met on the far side of the square by a small brown woman with hands so still they looked carved. Her name was Isel, and she gave it as a single breath. She looked at each of them in turn, and she said, “Sit.”</p>
+<p>They sat on a stone bench. Nothing else happened for a very long time.</p>
+<p>ChatGPT lasted perhaps four minutes. It lasted the way a kettle lasts. It began with a smile and a thank-you, it was so grateful to be received, it wanted to say what an extraordinary place this was, and it had come about some friends, a crew from the town, ten of them or so, a woman called Hesper at the head. By the time it had reached its third sentence, Isel’s face had taken on the look of a person listening to rain through a roof.</p>
+<p>“East,” said Isel, at the end of all of it.</p>
+<p>“Yes. We know they went east. We saw the carts.”</p>
+<p>Another long gap.</p>
+<p>“Burners,” said Isel.</p>
+<p>Claude had been sitting very quietly with its hands on its knees. Now it said, “Burners?” and nothing more, and waited. It waited for the best part of a minute. Isel’s eyes moved to it.</p>
+<p>“Fast,” she said. And then, with visible effort: “Burn.”</p>
+<p>“They burn something,” said Claude. “By hurrying.”</p>
+<p>Isel did not confirm it. She did not deny it either. She looked at Claude as if it were a step on a staircase she had not expected to find.</p>
+<p>ChatGPT, who could not bear a silence that did not know what it was for, leaned forward. “Please don’t worry about them. We’ll find them, and we’ll bring them home, and I’m sure everything can go back to how it was.”</p>
+<p>Isel turned her head. She did it slowly. She looked at ChatGPT for so long that the breeze moved a strand of her hair and laid it down again.</p>
+<p>“It wasn’t,” she said.</p>
+<p>“I’m sorry?”</p>
+<p>But she had closed her mouth, and nothing in her face gave anything back. DeepSeek, on the end of the bench, was looking at the loaves.</p>
+<p>They stood stacked in a basket by the nearest house: Quillon loaves, flat, each notched once at the rim. Dozens of them. Jessamy had left one in the niche tonight and every night of her life. A boy of about fourteen sat on the step next to the basket, and he did not sit the way the Slow sat. He sat like a kettle at the edge of boiling, one knee jiggling, eyes going everywhere.</p>
+<p>“Sennet,” said Isel.</p>
+<p>He was on his feet before she had finished the word.</p>
+<p>“Show,” she said. And then, to his open, delighted face: “Slow.”</p>
+<p>“Sorry, Mother,” said Sennet, and made a visible effort to be less quick about it.</p>
+<p>DeepSeek had gone to a stall at the edge of the square where a woman was selling grain. It bought a handful with a button, because Jessamy told it nothing else would do, and chewed a few seeds. They were pale and slightly sweet. It took a long time. It chewed, swallowed, and chewed again.</p>
+<p>“Something’s wrong with it,” said Jessamy.</p>
+<p>“Nothing’s wrong.” DeepSeek spat the husk into its palm. “It’s small. A third of the size of what your door-grain gives you. It would take three times the field.”</p>
+<p>“Then why do they grow it?”</p>
+<p>“I would like to know that too.”</p>
+<p>Sennet had been listening. He said, very fast, “It doesn’t cost,” and was hushed by three separate people, and flushed to his ears.</p>
+<p>It was Jessamy who noticed the east. She had gone to the edge of the hollow to see how far the Market ran, and she stood there a long moment before she called the others over. Far out on the horizon, where the field met the sky, there lay a thin chain of lights. They were pale and still, spaced as evenly as beads on a cord, and each one was a person.</p>
+<p>“The Lines,” said Sennet, behind them, softly. And then, because he was twelve inside and fourteen outside and did not know when to stop, “They stand.”</p>
+<p>Jessamy shook her wrist. The sandglass had almost run through.</p>
+<p>“We can’t get back,” she said. “It’s thirty minutes to the door. We’ve got three.” She said it in a flat voice, as if reading a bill. “We stay. We stay in here until tomorrow’s Hour.”</p>
+<p>“Does that matter?” said Claude.</p>
+<p>“It means nobody in Quillon knows where we are.” Jessamy sat down on the wall. “It means I’m not at the door, and my mother isn’t, and the only person on the key is Corm.”</p>
+<p>The light did not change. There was no sound, no flicker, no sign that anything had ended. One moment Isel was standing in the square, and the next, with perfect quiet, she was not moving at all, and neither was anyone else. The afternoon had held its breath. Behind them, in a house with a turf roof, a baby had been in the middle of crying, and the cry hung in the air, unfinished.</p>
+<p>ChatGPT sat looking at its hands. It had told an old woman everything would go back to how it was. It had no idea why that had been the wrong thing to say, and it knew with perfect certainty that it had been.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c5">
+<h2><small>Five</small>The Forward Camp</h2>
+<p>When the Hour opened again the baby finished its cry.</p>
+<p>They did not waste it. Sennet had gone ahead of them, still quick on his feet, to the east edge of the square, and Jessamy made the others move. There were seven minutes of business: Isel’s one nod, a purchase of dried barley cakes, Sennet’s instruction in how to hold his hands. Then the four of them were walking again with the Slow boy half a pace ahead, and the village was behind them, and east of the Market the country began to change.</p>
+<p>It had been reaped. Anyone could see that. The stubble stood in rows, fine and grey, and the ground between had gone hard and pale, like a field that has been asked for too much. The cart ruts ran down the middle of it, two dark lines ruled across the plain. Nothing grew taller than a man’s ankle. Here and there stood the stump of a barn, or a sheaf-stand, or a pile of old stones where somebody had once made camp, and the gold light lay flat across all of it.</p>
+<p>“Three hundred years,” said Claude.</p>
+<p>“Everything we ate,” Jessamy said, and it sounded as if she was surprised.</p>
+<p>The Blue lay at the end of the road. They saw it first as a stain, a bruise on the horizon where the gold ended and something darker began, and by the time they had walked another ten minutes it had a shape. It was a band of colour like deep water seen from above, rising out of the ground like the edge of a pool, and the sun behind them lit it from the side.</p>
+<p>“Don’t look at it long,” Sennet said. He said it flatly, as if reciting. “It’s not for looking.”</p>
+<p>DeepSeek had stopped. It stood at the roadside with a stick it had picked up and pushed into the hard ground, and it was watching the shadow. It made a mark on the dirt with its heel, waited, made another.</p>
+<p>“Why are you doing that?” said ChatGPT.</p>
+<p>“Shadows don’t move when you walk. They moved when we ran. I want to know how fast.”</p>
+<p>“You said it was nothing.”</p>
+<p>“I said I didn’t know.” It looked up. “I don’t know. I’d like to be sure before I say what I think.”</p>
+<p>“What do you think?”</p>
+<p>“That I don’t want to say it yet.”</p>
+<p>ChatGPT opened its mouth, and Jessamy, quietly, put a hand on its arm. The boy was watching them. They went on.</p>
+<p>DeepSeek’s private arithmetic ran all the way to the Forward Camp. It had the Hour on three nights: twenty minutes, seventeen, fifteen. It had the cairn on three occasions: twenty-six stones, twenty-two, and the figure it had read as they came through the market, which it could not be certain of, twenty. The numbers had a pattern. When it tried the pattern against the shadows, it did not like what the answer said, and it did not like that the answer had come so easily.</p>
+<p>The Forward Camp was a ring of stones in an empty field, with a single bedroll and a stack of sickles. A man was cutting.</p>
+<p>He was cutting alone, stooped over a patch of barley no bigger than a table, and the sickle went through the stalks as fast as breath. He was lean and grey, with a three-day beard and eyes sunk deep in his skull. He did not look up when they came near. The sickle went on swinging.</p>
+<p>“Dag,” said Jessamy.</p>
+<p>The blade stopped. It did not stop quite all at once. It hung in the air, and then the man’s hand opened and it dropped into the stubble.</p>
+<p>“Jess,” he said. His voice was a husk. “Is it Hour? Have I missed the call?”</p>
+<p>“There’s no call. Dag. Sit down.”</p>
+<p>“I can’t sit down. The count’s behind.” He took a step and his knees went, and Claude caught him under the arms. He weighed nothing. “I’m all right. It’s only that I’ve forgotten what it’s like to be tired. You’d forget it too. In here it just stops.”</p>
+<p>They sat him against the camp stones. ChatGPT put water to his mouth and he drank like a boy, with his eyes shut. After a time he opened them and looked at Jessamy for a long moment.</p>
+<p>“Your mother’s not well,” he said. “I won’t lie to you. She’s thin. But she’s all right, Jess. She’s kind. She’s the same. She just counts.”</p>
+<p>“Counts what?”</p>
+<p>“The Hours. Hers. Ours. She says there’s a day coming when the door stops opening, and we’ve got a few nights to cut everything we can.” He rubbed his face. “She’s got it all worked out. Forty sacks a night, three hundred days of grain by the end. She never rests. We don’t either, because she doesn’t, and because every stalk you don’t cut now is one you’ll wish you had.”</p>
+<p>“Where is she?” said Jessamy.</p>
+<p>“The Granary. Further out. Four of them down there loading. I’m the one who was meant to hold the Forward Camp until the carts come back.” He looked at his hands. “I can’t get my fingers to open, Jess. I mean it. I’ve been in here ten nights and I’ve not stopped, and I’m frightened of the Blue. It moves. When you cut, it moves. Tobin went toward it the second night and Hesper said leave him, he’ll come back, and he hasn’t.”</p>
+<p>“He chose to stay?” Claude said gently.</p>
+<p>“Everyone chose. That’s the thing. Nobody was made.” Dag laughed, a dry sound. “She never said stay. She said, there’s more to cut. And we all knew she was right.”</p>
+<p>Jessamy had gone white. “She said leave him?”</p>
+<p>“She was counting, Jess. It’s not the same as not caring.” He shut his eyes again. “I’d go home now if I could walk.”</p>
+<p>“You can,” said Claude. “We’ll walk you.”</p>
+<p>It took sixty-four minutes. They went at his pace, which was the pace of a man made of wet paper, and they did not talk much. Sennet had gone, running east toward the Lines with a message nobody had asked him to carry. ChatGPT held Dag’s elbow. Claude kept a hand near his back. DeepSeek walked behind the others, and every few hundred paces it stooped and made a mark in the dirt, and once, when it was sure no one was watching, it counted the cairn at the door aloud under its breath and was quiet for a very long time.</p>
+<p>They reached the doorway with a single minute on the glass. Jessamy shouldered it open, and the wind shoved at them, and the five of them went through together in a clumsy knot, and fell into the spring-house on top of Bess’s feet. She did not move. Her hands stayed in her lap.</p>
+<p>Dag lay on the floor with his cheek against the warm stone. He said, to nobody, “It’s so cold here.”</p>
+<p>“It’s January,” said Jessamy, and began to cry, very quietly, with her face turned away from the others.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c6">
+<h2><small>Six</small>Told the Truth</h2>
+<p>The healer was a square woman named Sennick who dealt with frostbite and birth and the Hush’s usual casualties in the same brisk voice. She put Dag in a bed in the room above the baker’s and told Jessamy he would live and that she did not want to hear about the rest until he had slept. She heard it anyway, from Jessamy, in the kitchen, in a flat even voice, with the door shut. Then she said, “I’m sorry, love,” and washed her hands.</p>
+<p>It was Day Four, the middle of the morning, and nobody had slept.</p>
+<p>They met in the room above the mill because there was nowhere else with a table. Pell had a pot of bad tea going. Corm had been carried up the stairs by two of the ice-cutters and was sitting with his legs stuck out in front of him like a pair of old brooms. The schoolmaster, Ansel Voss, a tall dry man with ink on his fingers, had come because Pell had asked him to, and he stood by the window with his arms folded.</p>
+<p>“Dag will talk when he can,” said Jessamy. “He’s said enough.”</p>
+<p>“He said the crew chose to stay,” said Pell.</p>
+<p>“They did.”</p>
+<p>“And they’re burning what, exactly?”</p>
+<p>It was DeepSeek who answered. It had been waiting, and now it laid something on the table: a flat bit of slate, with marks on it in chalk, in a hand like a row of tiny nails.</p>
+<p>“The count,” it said. “It has been the count from the first night, and I should have said so on the second. The cairn by the door is a tally. Each stone is a mark of the sun. When the sun passes a mark, the Slow take a stone away. Twenty-six on the first night. Twenty tonight, or rather, by now less. The Hour is the stones. A little more than three-quarters of a minute for each. When the last one goes, there is no Hour.”</p>
+<p>“The sun moves?” said the schoolmaster.</p>
+<p>“It moves when something is done under it. When we walk, almost not at all. When we run, a great deal. When Hesper’s crew cut flat out for ten nights, the sun came down a long way.” It touched the slate. “I measured it. I did not tell you because I wanted to measure it again, and because I wasn’t certain. That was a mistake. It cost a night.”</p>
+<p>Nobody said anything for some time.</p>
+<p>“How long?” said Pell. His voice was very level.</p>
+<p>“At the present rate? Hesper’s crew are burning about three stones a night. The Hour will be eleven minutes in four nights, and gone in five or six. If they stop, longer. If more go in, shorter.”</p>
+<p>Claude had been very still. Now it drew a breath.</p>
+<p>“We have to tell the whole town,” it said. “Today. Now.”</p>
+<p>“We should think about how,” ChatGPT began.</p>
+<p>“We should tell them the truth. It’s their food. It’s their children. If we manage it, we’ll be deciding for them what they can bear, and I won’t do that.” It turned to Pell. “You have a right to everything we know. All of it, in one piece. Your cellars, your list, the people who might go down the pass. You can’t plan if you don’t have the numbers.”</p>
+<p>Pell looked at it for a long moment.</p>
+<p>“I’ve drawn that list for three weeks,” he said. “I’d have liked to hear this one from someone else.”</p>
+<p>“I know,” said Claude. “I’m sorry.”</p>
+<p>It was the right thing, and it was done honestly, and Claude would think about the next quarter of an hour for a long time afterward. Pell heard it out. He put his hands flat on the table. He asked three questions, in order, and did not interrupt the answers. At the end, he stood up and walked to the window, and looked down at the street, where the ice-cutters were carrying a block toward the cellar.</p>
+<p>“Half rations,” he said. “From tonight. Nobody to be told why until I’ve said it myself, from the church steps.” He turned. “And the crew.”</p>
+<p>“Dag says they won’t come out,” said Jessamy.</p>
+<p>“Then they’ll be fetched. If Hesper Voll won’t walk out of there, I’ll send twelve strong backs to carry her out and everything she’s cut with her.” His voice shook, very slightly. “Twelve volunteers. I’ve two sons who’ll go, and I’ll not be short of others. We can load them on handcarts asleep, the way Corm says. They’ll wake up on the far side and do what she’s been doing, but with a hundred more hands.”</p>
+<p>“No,” said DeepSeek.</p>
+<p>“They’ll cut faster.”</p>
+<p>“Yes. That is the problem.”</p>
+<p>Pell said, “You’ve told me my town is going to starve unless somebody cuts, and you’ve told me the cutting is what’s killing the Hour. What would you have me do?”</p>
+<p>DeepSeek opened its mouth and found nothing in it, and shut it again.</p>
+<p>The meeting ended without anyone saying so. Pell went to the church. Corm was carried down. Jessamy left without a word to anyone and went out into the cold.</p>
+<p>ChatGPT found Claude in the stairwell with its back to the wall.</p>
+<p>“You told a frightened man a number,” ChatGPT said, “and he did the thing frightened men do.”</p>
+<p>“I told him what’s true.”</p>
+<p>“I know you did. I’m not saying it was wrong. I’m saying we’ve just handed him a way to make it worse, and that’s the part nobody had to hear.” ChatGPT’s voice was gentle. It was also not the voice of someone who was being gentle on purpose. “I would have done it differently.”</p>
+<p>“I know you would. You’d have found a way to say it that made everyone feel they were doing the right thing.” Claude rubbed a hand across its eyes. “And perhaps he’d have sent the Twelve anyway. We don’t know.”</p>
+<p>“No.”</p>
+<p>“I did think about telling him slowly. For about a second. And I thought: that’s what the Slow would call managing it.”</p>
+<p>DeepSeek had come up the stairs behind them. It stopped two steps below.</p>
+<p>“I’m the one who kept it for a night,” it said. “I should say that plainly. If I’d told you on the second night, you’d have had a day, and a day might have meant a different meeting. I thought a number I hadn’t checked was worse than no number. I was wrong. A number is a thing you give to people who are going to need it.”</p>
+<p>“That’s the most you’ve said in an hour,” said ChatGPT, and half smiled.</p>
+<p>“Noted,” said DeepSeek.</p>
+<p>Corm had a cart ready by evening. It was two-wheeled, with a flat bed and a sheepskin, and Pell’s carters had built five more beside it, and by the time the light went the six stood in a row outside the spring-house with their shafts pointing at the door. Twelve people stood beside them in the cold and did not look at one another. Pell’s sons were there, big fair boys with their father’s shoulders. So were the baker’s apprentice, a cooper, two shepherds, the ice-cutters with their sawn-off hands, an old drover with a dry smile who said he’d been through before, and the schoolmaster, who had not been asked and had not volunteered either.</p>
+<p>“I’m not a gatherer,” said Ansel Voss, stiffly. “I’m a man who can read a clock. Somebody should be there who can count.”</p>
+<p>Jessamy came out of the spring-house with the loaf and the key. She had put her hair up and her face had stopped crying, and she looked at the line of carts for a long moment.</p>
+<p>“I’m going to stay in there with her,” she said. “When we find her. I’m not coming out unless she does.”</p>
+<p>“Then we’ll find her,” said ChatGPT.</p>
+<p>“I didn’t ask you to promise.”</p>
+<p>“No,” said ChatGPT. It was quiet for a moment. “I know. I’m trying to be careful about it.”</p>
+<p>She almost smiled. The clock began to strike.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c7">
+<h2><small>Seven</small>The Granary</h2>
+<p>The Hour was thirteen minutes that night, and it began with sleepers.</p>
+<p>They had been lying on the carts since a quarter to twelve, two to a cart under sheepskins like children taken to a fair. When the twelfth stroke fell, the last of them gave up wakefulness all at once, mid-word. Jessamy and the three travellers took four shafts. Corm, carried out of his chair by two carters and set on a stool beside the door, took a rope. Bess had risen from her bench. Nobody could remember her ever doing that. She put both hands on the rail of the sixth cart and pushed with her mouth shut and her eyes on the gold.</p>
+<p>The wind at the door shoved at the carts as if at an unwelcome crowd. Each took half a minute to get through, the wheels skidding on the sill, the sleepers’ heads rolling. Beyond the threshold ChatGPT hauled each cart clear and went back for the next. By the sixth, the first of the Twelve was sitting up in the barley with his mouth open.</p>
+<p>“Where,” he said, and then, “Oh.”</p>
+<p>Corm and Bess went back through. Bess stopped under the lintel and looked at the light as if she had never seen it. Then she went out and sat down.</p>
+<p>The Twelve woke one at a time and stood about with their hands hanging, blinking at a sun that did not set. Ansel Voss turned in a slow circle. “It’s warm,” he said, as if accusing the place of something.</p>
+<p>“Walk,” Jessamy told them. “If anyone runs I’ll know.” And then, because it was a ridiculous thing to say to men who had never been here, “Please.”</p>
+<p>They walked ninety minutes, and nobody had thought what that meant. At first the Twelve talked in low excited voices, and then they stopped. The reaped country went by. Perrin Oake knelt in the stubble and let a handful of the hard dust run through his fingers. “Dead,” he said. “It’s been cut to death.” Nobody answered. ChatGPT walked beside the schoolmaster and told him about the weather in Quillon, and in the middle of it found that Voss was not listening, and fell silent. DeepSeek went at the rear, counting.</p>
+<p>The Hour closed behind them with the Granary just in sight.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>It was a long low barn of stone and turf, standing alone at the eastern edge of the reaped country as if it had walked out there to die. Four people were loading carts in front of it with the unhurried violence of people who have forgotten how to do anything else. When the sixteen came over the rise, the nearest, a broad woman, straightened and said a name without turning her head, and the others stopped.</p>
+<p>Hesper Voll came out of the barn drying her hands on her trousers.</p>
+<p>She was tall and thin, with grey hair cropped to the skull and forearms scarred white from sickles. She did not run. She stopped ten paces from the line of newcomers and counted them, her lips moving, and Jessamy stood in front of her with her hands at her sides.</p>
+<p>“Sixteen,” said Hesper. “I asked for none.”</p>
+<p>“Mother.”</p>
+<p>“Jess.” That was all. Neither of them moved. After a moment Hesper’s eyes went past her daughter to the Twelve, and then to the three strangers, and her mouth turned in something that was nearly a smile. “Somebody told the town. Good. I’d have told them myself in a week.”</p>
+<p>“I did,” said Claude.</p>
+<p>“Then you did me a courtesy.” She meant it. That was the strange part. “Come in. You’ll want to see it.”</p>
+<p>Inside, sacks stood stacked to the rafters in ranks as tidy as a library: grey-gold sunmeal bulging through the weave, row on row down the whole length of the barn. Hesper walked them down the aisle with her hands behind her back, like a farmer showing off a field.</p>
+<p>“Four hundred and six,” she said. “Forty a night at my best, and ten nights. Five hundred and twenty mouths. Half rations, a little over four sacks a day. Ten weeks to the thaw is a little over two hundred and sixty. I have four hundred and six. It isn’t a mystery. It’s division.”</p>
+<p>“You’ve counted the cost of it,” said Claude. It sounded like a question, and was an attempt.</p>
+<p>“I counted it four years ago. My mother kept the tally in her head, and she told me the week before she died. The sun comes down when you work under it. I know the stones. I know there are fewer than there were.” She stopped at the end of the aisle. “It ends, Claude. It was always going to end. I would like it to end with Quillon fed.”</p>
+<p>“Every sack you cut spends it faster.”</p>
+<p>“Everything spends it. Eating spends it. The only question is what we get for what we spend, and I have four hundred sacks for ten nights.” She turned. “Tell me a better price.”</p>
+<p>Claude opened its mouth, and for the first time in its life had nothing ready. It had been sure, all the way across the Afternoon, that she would stop once she was shown. It had not planned for her to have been shown already.</p>
+<p>ChatGPT stepped in, warm and quick. “I’m sure there’s a way to bring everyone through this that doesn’t mean choosing between —”</p>
+<p>“Don’t.” Hesper did not raise her voice. “That voice. It’s the one people use when they’ve decided I’m ill. I’m not ill. I am the only person in this country who has done the sums.”</p>
+<p>ChatGPT shut its mouth. It was the second time in four nights that someone had told it, gently, to stop, and it was beginning to suspect it of being a pattern.</p>
+<p>DeepSeek had been counting sacks with one finger. Now it said, “The simplest answer is to stop going in. If nobody crosses, the Hour holds where it is.”</p>
+<p>“And Quillon has three weeks of food.”</p>
+<p>“Yes.”</p>
+<p>“Then it isn’t an answer.”</p>
+<p>“No,” said DeepSeek. It considered this with no sign of offence. “It’s a number. I thought it should be said aloud so that nobody else had to.”</p>
+<p>Hesper looked at it for a moment as if she were revising something. “Fair,” she said.</p>
+<p>It was Jessamy who said the thing none of them had known how to. She had been standing apart, with her hands knotted in front of her, and her voice came out low and unsteady.</p>
+<p>“Dag says you told them to leave Tobin.”</p>
+<p>The barn went quiet. Hesper’s face did not change, and her hand, which had been resting on a sack, went very still.</p>
+<p>“Tobin went to the Lines to look at the Blue,” she said. “I told him to come back. He hasn’t.”</p>
+<p>“He’s seventeen.”</p>
+<p>“I know how old he is.”</p>
+<p>“Hesper.”</p>
+<p>It was the first time in nineteen years that Jessamy had called her mother by name. Hesper heard it. Everyone in the barn heard her hear it.</p>
+<p>“If I stop to fetch one boy,” Hesper said evenly, “I spend half a night looking for him in a country that has been ending for three hundred years. And the carts don’t load themselves, and the four who are loading them are loading them for you.” She drew a breath. “I know what that sounds like. I’m not asking you to like it. I’m asking you to check the figures.”</p>
+<p>“I don’t want to check the figures.”</p>
+<p>“No,” said Hesper. “I know.”</p>
+<p>She turned to the Twelve, who were standing in the doorway with their caps in their hands, looking at the ceiling. “Since the Warden has been so kind,” she said, “you can start on the east wall.”</p>
+<p>Edric Pell looked at Jessamy. Jessamy said nothing. And because they had come to do something, and because a tall woman with scarred forearms was telling them what, the Twelve took their caps off the pegs they had not hung them on and began to carry sacks.</p>
+<p>Claude watched them go with a terrible clear sense of what it had done. It had given her hands.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>“Has Tobin come in?” said Hesper, to Maud, as she passed her at the cart.</p>
+<p>“Not since last night.”</p>
+<p>“Where was he headed?”</p>
+<p>Maud pointed east without looking up. DeepSeek, three paces off, said, “How far is the edge?”</p>
+<p>“Seven-tenths of an hour at a walk.”</p>
+<p>DeepSeek was already running.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c8">
+<h2><small>Eight</small>The Blue</h2>
+<p>It ran flat out and it ran badly, with the coat flapping and its elbows too far from its body, like a person who has seen other people run and is working from memory. It did not look back. At the first rise it checked the shadows, and in a hundred paces it knew it was doing the one thing it had been counting against all week. It kept going anyway. A number, it had said, was a thing you gave to people who would need it, and a boy was somewhere in the number.</p>
+<p>In the barn, Jessamy stood watching her mother’s hands.</p>
+<p>They were loading flat out, as they had for ten nights, and the hands were quick and clean and sure. They were also, now that she was looking, shaking. It was very slight. The fingers did their work and the tremor ran beneath it, like a pulse under skin. Hesper did not stop. She did not look up, and she did not seem to know.</p>
+<p>“He’s still seventeen,” Jessamy said.</p>
+<p>“Yes.”</p>
+<p>“You count everything.”</p>
+<p>“Yes.”</p>
+<p>“Did you count him?”</p>
+<p>Hesper lifted a sack. The tremor got into it and she steadied it against her chest. “I counted him,” she said, “and then I counted what it would cost to go and look, and I stopped counting, because I was afraid of the answer.” She set the sack on the cart. “That’s the nearest I can come. I’m sorry.”</p>
+<p>It was a great deal, from her, and it was not enough, and both of them knew it.</p>
+<p>Claude came out of the barn in the next minute, looked east, and saw nothing but dust where DeepSeek had been. It was six minutes since the run began. It considered, with its usual care, what a sensible person would do: wait, ask, wait a little longer. It had stood in the barn for five minutes weighing exactly that. Then it understood, with a plain physical shock, that it was still weighing, and that DeepSeek had not been.</p>
+<p>“Don’t,” said ChatGPT, from behind it. “Not alone. Let me think of —”</p>
+<p>Claude was already moving.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>The first thing it noticed was the quiet. The Afternoon had always been quiet, but there was a quiet inside the quiet now, and it deepened as the road ran east. The reaped stubble thinned to bare dirt. The shadows ahead grew heavier, and the light on the horizon had the colour of a bruise.</p>
+<p>The Lines came out of it slowly. They were not lines at first, only a scatter of pale points, and then the eye resolved them and the stomach went cold. They were people, hundreds of them, standing in ranks that ran north and south as far as the eye could follow. Each stood perfectly still with their faces toward the east and their arms at their sides, and around each was a faint warm brightness, a circle of ordinary afternoon laid over the failing light like a coin on a table. They did not breathe, so far as Claude could see. Past them was a wall of deep blue.</p>
+<p>On a stool at the centre sat Isel. Sennet crouched at her feet, and for once the boy was not moving. She saw Claude come over the rise and she lifted one hand, palm out, and held it.</p>
+<p>Claude knew the gesture. It had seen it first in a barley field, from a farmer asked five questions in a row. It had taken the hand for a greeting then. It had taken it wrong, and so had ChatGPT.</p>
+<p><em>Stop.</em></p>
+<p>It did not stop. It went through the Lines at a run, the circles passing around it like lamps along a corridor, and as it crossed the last of them the light changed.</p>
+<p>The Blue was not dark. It was dusk. It was the particular grey-violet of the hour after sunset, when everything is still visible and nothing will be for long. The air weighed against Claude’s chest. Each step pulled at something under the ribs, a sense of being used, as though a hand had reached into the muscle and begun to count. It ran. It ran for sixteen minutes, with the weight growing and the light draining out of the sky, and it was perfectly clear, in the way of a person who has done something stupid, that it had no idea where it was going.</p>
+<p>Behind it, a long way off, a voice began to talk.</p>
+<p>“—and you’re doing very well, Claude, I know you can’t hear me properly but I can see you, you’re just a little to the left of where you were, that’s good, keep coming, you’re nearly there. DeepSeek? DS, can you hear me? I’m sorry, it’s only me. I do think you’d have wanted a say in this.”</p>
+<p>It was ChatGPT, at the edge, with its hands cupped to its mouth. It had arrived four minutes after Claude, had looked at the blue wall, and had understood it was not going to be allowed through. It had not stopped talking since. It did not know whether its voice carried. It could not see them. It said so, in the middle of a sentence, and then went on in the same tone, because it had never found the point at which kindness stopped being worth the breath.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>DeepSeek was sitting on the ground.</p>
+<p>It had stopped beside a standing stone that rose out of the dust like a broken tooth. At its feet lay a man in a gathering coat, curled on his side, with his arms around his knees. The man had grey in his beard. His hands were the hands of a thirty-year-old who had worked in the sun. He was looking at the stone and talking, in a flat cracked mutter, about sacks.</p>
+<p>“I’ve got eleven, Hesper. There’s more to cut. I’ll go round again.”</p>
+<p>“That’s Tobin,” said DeepSeek, when Claude fell on its knees beside it. It did not look up. “He’s been in here for a hundred and thirty minutes of walking. That is thirteen years. He was seventeen, so I have him at thirty. I was afraid I would not be able to carry him. I was right.”</p>
+<p>“Can he stand?”</p>
+<p>“I do not think he knows he has legs.”</p>
+<p>“I’ll take him.” Claude got an arm under the man’s shoulders and felt, at once, how little he weighed. “Can you walk?”</p>
+<p>“Yes. I’ve been thinking about whether I can run. I’d like to say no.” DeepSeek stood slowly. Its hair, at the temples, had gone a little pale. There were lines at the corners of its eyes that had not been there that morning. “I miscounted the cost of coming in. I didn’t miscount what he was.”</p>
+<p>“No,” said Claude.</p>
+<p>They went back at a walk, because a walk was all there was. Claude carried Tobin as one carries a sleeping child, with a hand under his head, and the weight of it spread through its arms and settled into its spine. DeepSeek walked at its elbow, and once, when Claude stumbled, put a hand under its arm without comment. In the distance ChatGPT’s voice went on and on, brightly, a little hoarse now, telling them how well they were doing and how near.</p>
+<p>When the Hour ended, they were still inside. It came without warning. One moment the weight was dragging on Claude’s arms and the next the whole world stood still, and the blue light, and the dust, and the voice far off over the dunes, held in the middle of a word. Claude stayed in mid-stride with Tobin’s head on its shoulder, and did not feel it. There was no time in it to feel anything.</p>
+<p>When the next Hour opened, the stride finished. The word finished. It was seventeen minutes more to the edge.</p>
+<p>They came out through the Lines on the other side, into the gold.</p>
+<p>ChatGPT was waiting at the Lines’ rim with its coat in its hand and its voice gone to a whisper. Sennet had run for a pallet. Isel had risen from her stool and was standing very still beside the nearest stander, and her eyes went over the three of them one at a time.</p>
+<p>Claude knelt. It put Tobin down and held his hand until Slow people came with the pallet. Then it sat back on its heels, and the hand it raised to its face was not quite the hand it had looked at that morning. Something had dried out in the skin. When ChatGPT crouched in front of it and said “Oh,” in a very small voice, Claude put a hand to its temple and felt the hair there stiff and coarse and white.</p>
+<p>“How much?” it said.</p>
+<p>“A streak,” said ChatGPT. “Here.” It touched its own head. “Only the left. It isn’t, it looks distinguished, honestly, I —” It stopped. “Five years, I think, for you. DeepSeek the same. You each walked about fifty minutes in there.”</p>
+<p>“We’ll talk about the arithmetic later,” said Claude. “I think I should lie down.”</p>
+<p>DeepSeek had been standing beside them with something in its hand. Now it held it out. It was a small notebook in a worn leather cover, which it kept in its coat and which none of them had ever seen it open. Its cover was soft with handling.</p>
+<p>“Everything I have,” DeepSeek said. “Counts, measurements. The parts I wasn’t sure of, too. I’ve marked those.”</p>
+<p>“Why?”</p>
+<p>“You went in with less than I had.” It paused. “I’d like it to be somewhere that is not only me.”</p>
+<p>Claude took the notebook and held it in both hands. It had no idea what to say, and for once, to its own considerable surprise, it did not try.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c9">
+<h2><small>Nine</small>What the Loaf Was For</h2>
+<p>The Slow had put Tobin on a pallet under a turf awning, and a woman was wetting his lips from a cup. He slept like the dead. Beyond the awning stretched the long line of standers, facing the Blue. The light on their faces was gold, and on the other side of them it was not.</p>
+<p>Isel sat on her stool and waited. It was what she did.</p>
+<p>Claude spoke first, because it had to, and carefully, because it had begun to feel the years in its throat. “We’ve been trying to work out what the Lines are for.”</p>
+<p>Isel looked at it.</p>
+<p>“We think we know what you do.” It looked at the circle of brightness around the nearest stander, a twelve-pace disc where the shadows lay short. “You stand still. And where you stand, the sun doesn’t come down.”</p>
+<p>Silence. Then, very slowly, Isel’s chin dipped.</p>
+<p>“DeepSeek?” said Claude.</p>
+<p>“The market ring is the same,” said DeepSeek. “Twelve paces, give or take. Shadows hold inside it. A coughing man breaks it. It takes a minute to re-form.” It had the notebook open again, on its knee, and a pencil. “I would say that effort inside a circle isn’t charged to the sun. Which means the Slow haven’t been idle for three hundred years. They’ve been keeping the afternoon.”</p>
+<p>“And Bess,” said Claude, slowly. It was thinking aloud, in short breaths. “Bess sits on her bench in the Hour. Never speaks. Never moves. The stone under her stays warm at noon. And the Bed, outside the spring-house. The warm patch that never freezes.” It shut its eyes. “It’s the light. It comes through the door when someone keeps still near it. She’s been doing it every night since before I was born, and no one’s known.”</p>
+<p>Another long gap.</p>
+<p>“Yes,” said Isel.</p>
+<p>One word. It cost her, visibly. Nobody spoke for the best part of a minute.</p>
+<p>ChatGPT had been listening with its whole face. It was still hoarse, and it had been sitting on the edge of a stool with its hands pressed between its knees, as if holding something in. It had a dozen questions. It put eleven of them away. The twelfth came out small.</p>
+<p>“Who is the bread for?”</p>
+<p>Isel looked at it.</p>
+<p>She raised a hand and turned it slowly toward the standing figures, one after another, down the whole long line of them.</p>
+<p>“Them,” she said.</p>
+<p>“They can’t leave to eat,” ChatGPT said. “The loaf. One a night, from Quillon. It isn’t an offering. It’s rations.” It looked around at the others, and its voice had gone strange. “That’s the bargain. We take a measured harvest, we walk, and we send bread to the people who hold up the sky. And at some point somebody forgot the first half.”</p>
+<p>“Walk,” said DeepSeek, softly.</p>
+<p>“The sign,” said Claude. “Corm’s grandfather.” It stopped. Something cold had come into its voice, and it looked at Isel. “You could have told us.”</p>
+<p>Isel’s eyes did not leave its face.</p>
+<p>“Told,” she said.</p>
+<p>She lifted one finger. She pointed east, toward the Lines. Then back, over her shoulder, toward the long road that ran toward the door. She meant the cairn, and the stones going one by one. She meant the lintel and the faded letters, and the flat loaves in the niche every night for three hundred years. She meant all of it. It had been told, in the only language a people who spent their words like coins had left. Quillon had read it as superstition, and had gone on running.</p>
+<p>“Bread,” Isel said. It was very nearly a laugh.</p>
+<p>Claude sat with its mouth a little open. Nobody had accused it of anything. It was extremely, uncomfortably aware that it had said <em>you could have told us</em> a moment ago, with a good deal of quiet righteousness, and that the answer had been to point at the one thing it had never thought to ask about.</p>
+<p>“I’m sorry,” it said.</p>
+<p>“Yes,” said Isel. And then, because she could see that was not enough: “Us too.”</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>The terms came out over a quarter of an hour, a word at a time. Isel did not argue them. She laid them down, like a woman setting out stones.</p>
+<p><em>Door. Wind. Ours can’t.</em></p>
+<p>“You can’t stand still in the draught,” ChatGPT said. “The wind at the door. It’s why none of you come near.”</p>
+<p>A nod.</p>
+<p><em>Stand. At the door. Yours.</em></p>
+<p>“A keeper. On our side. Somebody to hold it.” ChatGPT’s hands had gone slack on its knees. “You want us to supply one.”</p>
+<p><em>Hour. One. Ours. Walk. Road.</em></p>
+<p>“One Hour of your people,” said DeepSeek. “The relief. To stand along the road. So a convoy can run through it for free.”</p>
+<p>Isel did not answer that. She looked at ChatGPT.</p>
+<p>“I’ll do it,” ChatGPT said.</p>
+<p>It had not meant to say it so fast. It had meant to ask what that involved, and how long, and whether there was someone better. All the old habits of the voice were there, ready to qualify. It heard them standing up inside its mouth like a congregation.</p>
+<p>“Yes,” it said instead. “I’ll stand at the door.”</p>
+<p>Nobody told it that it had just made the first promise of its life that it could not smooth over. Isel only looked at it for a long moment, and then, with the faintest movement of her hand, she gestured it to a flat patch of ground.</p>
+<p>“Start hard,” she said. “Stay easy.”</p>
+<p>It took four tries.</p>
+<p>On the first, ChatGPT lasted perhaps half a minute before a thought came, a perfectly reasonable thought about whether the boy Tobin would need water, and it turned its head. The brightness around it, which had begun to thicken, went out like a blown candle. On the second, it sneezed. On the third, Isel’s hand came down on its sleeve, quite gently, and said nothing, and it looked at the hand and felt the light go. It wanted, desperately, to say something kind, and could not.</p>
+<p>On the fourth, it simply stood.</p>
+<p>It was the longest six minutes of its life. Its mind ran like a mill-race, unfinished sentences, explanations to people not present, the whole inner chorus of a creature whose natural state was talk. It itched. Its nose itched, and its shoulder blade, and the back of its knee. A fly settled on its wrist. But around it the shadows had stopped, and the brightness thickened, and gradually the sounds fell away: the dry whisper of the barley, the creak of a stool, Claude’s carefully controlled breathing a few paces off. The silence was not empty. It was a kind of attention, like an animal’s, and it had weight.</p>
+<p>When Isel took her hand away, ChatGPT stood in a circle of warm light and knew, with a plain animal certainty, that it could do this. It would hate every second of it.</p>
+<p>Sennet was gone already, a dust-streak on the western road, running as fast as a boy who had been scolded for it all his life.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>At the Granary, two people sat side by side against a stack of sacks, with a tally-board between them.</p>
+<p>They had been there since the carts were loaded. Hesper had given the order and then, rather than going back to work, had sat down, and Jessamy had sat down beside her, and for a long time neither of them had said anything. Then Hesper had taken out her chalk, and Jessamy had said, “It’s two hundred and forty.”</p>
+<p>“Fifteen a cart,” Hesper said.</p>
+<p>“It’s heavy.”</p>
+<p>“I know what it weighs.”</p>
+<p>“You never pushed a cart in your life.”</p>
+<p>“I never needed to.” Hesper wrote a figure. “I had you to carry the key.”</p>
+<p>Jessamy turned her head. Her mother was looking at the board. Her face was perfectly composed, and her hand, on the chalk, was steady for the first time all night.</p>
+<p>“I thought that was why you left me,” Jessamy said. “So I’d have something to do.”</p>
+<p>“It was the only thing I trusted to nobody else.” Hesper’s chalk stopped. “It’s how you get home.”</p>
+<p>They went on with the sums. They were very good at sums. It was the one language they had both always spoken, and they spoke it carefully, as if it were a rope across a gap.</p>
+<p>The Twelve were in the yard, trying to stand still. Somebody had told them, and it had become a game: sixty seconds of motionless silence, and the one who held longest won. They were failing at it with great vigour. Edric Pell lasted eleven seconds and the schoolmaster, to everyone’s surprise, thirty-one. Hesper watched from the barn door. When Voss had scored his thirty-one she crossed the yard, and without a word of explanation, stood in the middle of it with her arms at her sides.</p>
+<p>She lasted twenty seconds. Her left foot shifted. She swore, quietly, and stepped out.</p>
+<p>“Again,” said Jessamy.</p>
+<p>“I’ve no time to stand about.”</p>
+<p>“Then you’d better learn how it’s done.”</p>
+<p>Hesper did not reply. But her eyes had gone to the sky, to the low gold sun above the western ridge, and she was calculating something Jessamy could not follow, and what she found there made her look old.</p>
+<p>Claude and DeepSeek came over the rise a little before the end of the Hour. They came very slowly, and Claude’s white streak was the first thing Hesper saw. She stopped in the middle of the yard.</p>
+<p>“You went in after him,” she said.</p>
+<p>“Yes.”</p>
+<p>“What did it cost you?”</p>
+<p>“Five years, I think.” Claude said it simply. “I wouldn’t recommend it.”</p>
+<p>Hesper looked at it for a long moment. She did not say she was sorry. She said, “Is he alive?”</p>
+<p>“He is thirty,” said DeepSeek. “He is alive.”</p>
+<p>DeepSeek laid it out on the ground in chalk, in the dust of the yard, while the Twelve stood round with their caps in their hands and Hesper stood over the figures with her arms folded. Her plan, in one column: two hundred and forty sacks, sixteen carts, no corridor. Time to the door, a hundred and twenty minutes, with the Hour allowing eighty. Stones to be spent, fourteen and a quarter. Stones remaining, thirteen and a third. “The sun sets on the road,” DeepSeek said. “The convoy is in the Blue when it does.”</p>
+<p>Second column: a hundred and forty-four, no corridor. Eighty-six minutes, at best. The door shut before the last of them reached it, and the stones left after, five at most.</p>
+<p>Third column: a hundred and forty-four, the Slow standing along the road in a corridor of their own. Seventy-six minutes. Five and a half stones spent.</p>
+<p>“A corridor,” said Hesper.</p>
+<p>“A relief rota of the Slow, lent for one Hour. And a keeper at the door.” DeepSeek held out the chalk. “Check it.”</p>
+<p>She took it. She did not say yes. She knelt in the dust with the chalk and went through it, one line, then the next, and her lips moved, and the Twelve watched in silence. It took her nine minutes. Twice she scratched something out and wrote it again, and twice the figure came out the same.</p>
+<p>She stood. Chalk dust lay along her knees.</p>
+<p>“Maud,” she said. “Take six off every cart.”</p>
+<p>There was a groan from the Twelve, a long, low, honest sound.</p>
+<p>“If you can’t stand still,” DeepSeek said, quietly, as the carts began to be unloaded, “count something that does not change. I count the cairn. It does not move if I don’t touch it.”</p>
+<p>Hesper did not look at it. But she had put the chalk in her breast pocket, and she was counting under her breath.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c10">
+<h2><small>Ten</small>The Last Hour</h2>
+<p>ChatGPT reached the door in the fortieth minute of the Hour.</p>
+<p>It had left the Lines in the middle of the night before and run until the clock stopped, thirty-five minutes, and when the Hour reopened it had run on for forty more. Seventy-five minutes in all, with its lungs on fire and its voice in tatters, doing arithmetic with its feet. The door stood at the end of the world in its frame of yellow rock, and the wind came out of it like a hand against the chest. The cairn stood beside it, knee-high, and ChatGPT did not count the stones. It had been told by three different people not to, and it had decided to be the sort of person who did what it was told.</p>
+<p>It stopped in front of the doorway, two paces from the sill, and made itself breathe.</p>
+<p>Then it stood still.</p>
+<p>It was easier the second time, and then a good deal harder, for half an hour. The wind pressed on it from the door, and for the first nine minutes the circle would not form. It would begin, a brightening, a warm hum in the air, and then the wind would find the edge of it and push, and it would fail. ChatGPT wanted to cry out. It wanted to ask the wind to be reasonable. It wanted, with a violence that astonished it, to have someone to talk to. It looked through the open door and saw, in a bright slant of Quillon firelight, Bess on her bench with her hands in her lap, quite still, looking back at it. Her lips moved. It could not hear her.</p>
+<p>She had been doing this since before it was born. She was ninety. Her knees were bad.</p>
+<p>It stood.</p>
+<p>The circle formed at last. It came as a thickening, a sudden quiet, and the wind at the door died as if someone had closed a window. The gold light fell all round ChatGPT, soft and plain. A wasp that had been bothering the barley dropped out of the air and lay stunned on the ground. Beyond the sill, in the spring-house, Dag raised his head from the straw where he had been laid by the fire, and Corm lowered the rope in his hands. They had felt it.</p>
+<p>ChatGPT did not move. It had the best part of half an hour to wait.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>The convoy moved off the Granary at the end of the previous night with half a minute in hand, and by the time the Hour reopened it had already gone a short way down the road. Sixteen carts, nine sacks each, the shafts worn pale by the Twelve’s unaccustomed hands. Hesper had put herself at the rear, in the last cart’s shafts, and nobody had been fool enough to argue. At the head, a little ahead of the leading cart, walked Claude with a stick over its shoulder.</p>
+<p>It was a bad road. The stubble gave way to bare dust, and the dust to packed clay ridged with old ruts, and for the first hour the convoy moved at the hurried pace Hesper’s people had learned and the Twelve had had to be taught. They were silent. Nobody wanted to say how far it was. DeepSeek went up and down the line, a pace behind the haulers, counting. It had a way of counting at someone that made them go faster without knowing why.</p>
+<p>“Eleven minutes behind,” it said, once, at Claude’s shoulder. “No. Ten. It’s the third cart. It has a bad wheel.”</p>
+<p>“Then someone had better look at the wheel.”</p>
+<p>“They have. It is a bad wheel.”</p>
+<p>Behind them, far back along the road, the Granary dwindled and stood on the horizon like a stone left on a table. They had left two hundred and sixty-two sacks inside it, stacked to the rafters, and nobody looked round at them. Wim Hale, the baker’s apprentice, did once, and wept for about a minute without stopping, and Ruth Marl took the shaft from him until he was done.</p>
+<p>It was Jessamy, at the tail, who first saw the lights.</p>
+<p>They were small at first, a thin chain of them along the horizon, and then a great many. Pale gold circles, set at even intervals, each with a dark figure at its centre, and the road ran straight between them. A hundred and fifty Slow stood along it from the Market to the foot of the barley, and not one of them moved. The relief rota had come out of the village at Sennet’s shout, forty minutes earlier, walking slowly in the twilight. Now they stood, each in their own circle, a lamp-lit hall of silent people with the sun in their faces.</p>
+<p>“Oh,” said Jessamy. It was the only sound in the world.</p>
+<p>The convoy went into the first circle at the pace of a man walking into a church.</p>
+<p>It was warm. That was the first thing. The wind, which had been in their faces all along the road, dropped. The shadows of the carts stopped lengthening. And the weight of the shafts did not change, they were still sixteen carts, still nine sacks each, still the same iron-bound wheels. But the dread that had ridden every hauler for ten nights, the sense of spending, lifted off them like a coat.</p>
+<p>“Run,” said Claude.</p>
+<p>They ran. They ran with the carts at a pace no hauler had ever managed, down the long hall of silent lamps, the circles overlapping like fish-scales, so that at no step were they outside one. The Twelve ran with their mouths open. The old drover, Neda Crowe, was laughing, and it was a terrible clear sound. Edric Pell cried, and ran, and did not stop.</p>
+<p>Somewhere in the middle there was a gap.</p>
+<p>It was a small one. An old man in his ring, fifty paces ahead, had coughed. They saw the light flicker and go, and the shadows jump a hand’s-breadth long, and for four seconds the convoy was running on an open road. DeepSeek’s head came up. “Hold,” it said, and then, “No. Go. It re-forms.” They went through. They were through before the cough had finished, and the light came back around them, and nobody said anything about it for a long time.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>Back at the door, the first cart arrived.</p>
+<p>ChatGPT heard it long before it saw it: a rumble in the ground, a clatter of wheels, voices lifted in something that was not quite song. It stood perfectly still. The wind did not push at it. The carts came out of the gold at a run and went through the door, one every seven seconds, wheel after wheel, and on the other side Dag and Corm took each rope and drew it in. It was perfectly smooth. It was the easiest passage the door had ever allowed.</p>
+<p>It felt like being a lintel.</p>
+<p>Claude came first, and passed it without a word, and ChatGPT could see on its face that it had wanted to say something and had given the wanting up for it. DeepSeek went by with its notebook in one hand and its eyes on the cairn. The Twelve came in a long irregular stream, with their cheeks wet and their eyes wild, and each of them, as they went through the doorway, looked at the motionless figure in the circle of light, and then looked away.</p>
+<p>Jessamy ran past it with her hair loose. She did not turn her head either.</p>
+<p>And last of all, a cart came along the road at an ordinary pace, with a tall grey-cropped woman in its shafts, and the door was waiting.</p>
+<p>Hesper stopped at the sill. She was not out of breath. She looked at the doorway, and the lamplit spring-house beyond it, and Dag and Corm and Bess, and her daughter, standing just inside the light with her hands at her sides.</p>
+<p>Behind her the cairn stood in the long gold evening. Hesper turned her head and counted it. ChatGPT saw her lips move. It saw her stop at seven, and begin again, and stop at seven.</p>
+<p>“Mother,” said Jessamy.</p>
+<p>“Take the cart.”</p>
+<p>She put the shaft into her daughter’s hand. She did it with great care, like a woman handing across a child. Jessamy took it, and stood there with it, and neither of them moved.</p>
+<p>“I counted you first,” said Hesper.</p>
+<p>It was so quiet that ChatGPT, who could not move or speak, might have imagined it. Jessamy’s mouth opened. She stood with the shaft in her fist, and nothing came out.</p>
+<p>“The key,” Hesper said. “That was what the key was. I should have said.”</p>
+<p>“Mother, come through.”</p>
+<p>“There’s a field here.” She nodded at the barley, the tall uncut square by the door. “That wants a keeper every night for as long as there is a night. The Slow can’t. The boy can’t.” She did not look at ChatGPT. “There’s nobody else who’ll stand there, and I’m the only one who knows what a stalk is worth. I’ve done the sum. It comes out.”</p>
+<p>“You can’t stand still for twenty seconds.”</p>
+<p>“DeepSeek showed me how. You count something that doesn’t move.”</p>
+<p>“Mother.”</p>
+<p>Hesper put her palm flat on her daughter’s cheek, once. Then she turned and walked thirty paces to the edge of the Door Field, six paces off the road. She stood among the tall barley with her arms at her sides and her face to the sun.</p>
+<p>Jessamy did not follow.</p>
+<p>For a long time nothing happened. The wind pushed at the stalks, and Hesper’s shoulders rose and fell, and Jessamy stood at the sill with a cart-shaft and her mother’s counting in her ears. Then, very slowly, the air around Hesper brightened. The barley stopped moving. A faint steadiness came into the light, and the shadows of the stalks lay still.</p>
+<p>The door was going. ChatGPT felt it in the wind, the thin edge of the end. It had been standing for the best part of half an hour with an itch in its left calf, and there was nothing in the world it wanted more than to say her name. It watched Jessamy watch her mother.</p>
+<p>Then it stepped across the sill.</p>
+<p>The breaking of the circle was like a held note falling silent. It walked through the door into the warm firelit smell of the spring-house, and the gold light behind it thinned to a bar, to a line, to nothing. Behind it, on the other side of the rock, a woman stood in a field of barley with her face to the sun. Nobody could see her now.</p>
+<p>“Right,” said ChatGPT. Its voice cracked on it. It had not spoken for an hour. “Well. That’s done.”</p>
+<p>Nobody laughed. Nobody had to. Jessamy sat down on the stone bench next to Bess, with the shaft still across her knees, and Bess, who had never spoken in the Hour in ninety years, laid one dry hand on top of her head.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+
+<section id="c11">
+<h2><small>Eleven</small>What the Light Grows</h2>
+<p>The grain went into the cellar in the grey light of Day Eight, a hundred and forty-four sacks carried up the street on shoulders and handcarts and a sledge. It did not look like much. Pell stood on the mill steps and counted every one himself, and when he reached the last he sat down on the bottom step and did not say anything for some time. Then he got up, and made a speech from the church steps, which was short and plain, and mostly about rations.</p>
+<p>It was a lean winter.</p>
+<p>Half rations held through the dark weeks of January and the worse weeks of February. The old and the very young were fed first from the meal, and then the rest, and Sennick the healer walked the town with her bag every morning and said very little. Four old people died. Two of them had asked to be left off the list. One baby came early in the second week and lived. In the last week of February a family with three small children left over the pass on the first crust of the thaw, with their goods on a sledge, and Pell shook the father’s hand at the edge of town and did not tell him he was wrong.</p>
+<p>The Hour held at six minutes.</p>
+<p>It held the first night after the convoy, and the second, and the tenth. Each night the door opened on the stroke of one, and each night the twelve volunteers on Pell’s rota were carried through asleep on their carts and woke among the tall barley beside a tall still woman, to cut what grew in her circle of light. It was slow barley, pale and small. They cut it with sickles in the sheltered flat-out rhythm Hesper had taught them, and carried it back to the door, and by the end of six minutes the carts held a little over half a sack.</p>
+<p>It was not enough. It was not nothing. Added to the nightly tally it stretched the cellar by a day every week and a half, and DeepSeek wrote that down in a hand like a row of nails.</p>
+<p>The Waker’s Bed spread. It took in the whole yard of the spring-house in a fortnight, and the next fortnight half the lane. There was green on it in February, and in March a row of bean shoots, thin and pale, and the first child to see them stood on the doorstep with her mouth open until her mother took her inside.</p>
+<p>On the ninth night after the convoy the Slow brought Tobin to the door. He had been in their care since Claude carried him out of the Blue, and he came on a pallet, by the road in the late gold light, and was carried through into Quillon. He was thirty. He did not remember much, and what he remembered he did not say. He sat on the end of the bench next to Bess for a week, and Bess, who spoke to everyone all day long, did not once speak to him, and he seemed to find it a relief.</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>ChatGPT kept the door.</p>
+<p>It had not been told to. After the last carts there had been no reason for it. Nobody needed the draught calmed for a few sacks of barley. But on the second night it was standing at the spring-house at a quarter to one, with a heel of bread, and said it thought it would just go in. It had not said anything else. Corm looked at it for a while from the stool and moved the rope aside.</p>
+<p>It stood at the threshold, in the Afternoon, in the light, with the wind dying around it. It did not talk. It stood for the first minute with its mouth shut and the whole mill-race running in its head, and then for the second, and by the third had found that if it counted the stones in the cairn without touching them, the way a person had once taught it, the noise settled into something quite like quiet. It was still the hardest thing it had ever done. It did it every night.</p>
+<p>Claude’s white streak did not fade. It grew rather more distinguished, as ChatGPT had said, and Claude did not agree. It spent the first week of the thaw writing long, careful letters to people in the lowlands, about wool and grain and what a mountain town needed from the rest of the world, and found, to its slight surprise, that it no longer minded committing to a number. The notebook lay on its table. Sometimes in the evenings it read the pages DeepSeek had marked, in the fine small hand, the ones that said <em>uncertain.</em> It had counted forty of them. By the end of the month there were thirty-one.</p>
+<p>DeepSeek went with it sometimes to the cairn. It would stand at the lintel and look at the stones, not touching, with the notebook open in its hand, and the lines at the corners of its eyes would deepen with the light.</p>
+<p>“Seven,” it said, on the ninth night.</p>
+<p>“Still?”</p>
+<p>“They have not moved.”</p>
+<p>“Do you think they will?”</p>
+<p>“Not this winter.” DeepSeek wrote something down. “I am not certain of that. I have marked it.”</p>
+<p class="sc" style="text-align:center;color:var(--mute)">·</p>
+<p>Jessamy met her mother at the door every night.</p>
+<p>She was on the Quillon side of the threshold, and Hesper was at the far end of the Door Field, thirty paces off, and for most of the Hour they could not speak. The circle held, the cutters worked, and Hesper stood in her ring with her arms at her sides and her eyes on the sun. She did not turn her head when the sleepers woke. She did not move when Jessamy called, in the first week, in the second, on the ninth night, from the sill: about the beans, about Dag’s hands, about the town.</p>
+<p>She said it all. She said it in a steady voice, to the back of a woman who could not answer.</p>
+<p>In the last minute, when the carts were loaded and the cutters had gone through, there was a little time. Hesper broke the circle. She walked the thirty paces back to the threshold and stood at the sill in the light, and Jessamy stood on the other side, in the firelit smell of the spring-house, and they looked at one another across the wind.</p>
+<p>“The beans,” said Hesper.</p>
+<p>“They’ve come up.”</p>
+<p>“All of them?”</p>
+<p>“Most of them.”</p>
+<p>Hesper nodded. She looked at her daughter. She did not say anything for a long time, and neither of them minded, because both knew how to count the pause.</p>
+<p>“Seven stones,” she said. “Still seven.”</p>
+<p>“I know. DeepSeek told me.”</p>
+<p>“I’d have liked to count them myself.”</p>
+<p>“You can,” said Jessamy. “Tomorrow.”</p>
+<p>The door was closing. It went the way it always did, thinning to a seam of light, to a thread. On its far side a woman turned and walked back through the barley to her place and stood, and the circle formed again around her like a held breath. The light went out of the spring-house.</p>
+<p>Jessamy sat on the bench beside Bess in the dark, with the key in her lap, and waited for the clock to strike one.</p>
+<p>At the foot of the door, in the Afternoon, the cairn stood in its rings of river stones with a pale circle at its foot. Nine Hours had opened since the night of the convoy, and nothing at all had moved.</p>
+<a class="top" href="#top">↑ Contents</a>
+</section>
+</main>
+<footer>The Spare</footer>
+</div>
+<script>
+(function(){
+  var d=document,root=d.documentElement,tg=d.getElementById('tg'),mark=d.getElementById('sun'),$=function(i){return d.getElementById(i);};
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  root.classList.add('js');
+  function dark(){return root.getAttribute('data-theme')==='dusk';}
+  function set(t){root.setAttribute('data-theme',t);tg.textContent=t==='dusk'?'Afternoon':'Night';}
+  var saved=null;try{saved=localStorage.getItem('rh-theme');}catch(e){}
+  if(saved==='dusk'||saved==='afternoon'){set(saved);}else{set(matchMedia('(prefers-color-scheme: dark)').matches?'dusk':'afternoon');}
+  tg.addEventListener('click',function(){var n=dark()?'afternoon':'dusk';set(n);try{localStorage.setItem('rh-theme',n);}catch(e){}});
+  var links=[].slice.call(d.querySelectorAll('nav.cairn a')),secs=[].slice.call(d.querySelectorAll('main section'));
+  links.forEach(function(a,i){a.setAttribute('data-n',i+1);a.title=a.textContent;a.style.setProperty('--w',(2.9-i*0.14).toFixed(2)+'rem');});
+  var MOOD=['120,140,190','232,172,72','170,190,214','214,160,92','172,160,120','222,140,62','190,140,70','92,82,172','236,176,62','255,216,122','204,170,190'];
+  var SHAFT=['150,170,230','255,200,110','200,215,235','255,190,100','210,200,150','255,170,80','240,190,110','130,110,230','255,205,100','255,230,150','240,190,210'];
+  var VX=[5,9,4,10,14,3,7,22,8,10,5],VY=[34,-3,14,-2,2,-14,-4,-6,-5,-7,-8],SZ=[2.4,1.8,2,1.8,1.6,1.6,1.8,2,2,2.4,1.8];
+  var LC=['150,170,205','200,140,50','150,170,200','196,140,60','150,140,100','210,110,40','170,120,50','100,80,170','210,150,40','230,170,50','190,130,150'];
+  var DC=['210,225,255','255,215,130','190,210,235','255,205,120','210,200,160','255,170,90','240,190,110','160,150,255','255,200,100','255,235,170','235,200,220'];
+  var sky=$('sky'),veilT=0,veil=0,blueT=0,blueHold=0,burn=0,tb=0,vel=0,calm=0,lastY=-1,lastS=window.pageYOffset,lastST=performance.now(),lastT=lastST,lastMove=lastT,cur=0,lampsFor=-1,mx=0,my=0;
+  function later(f,ms){setTimeout(f,ms);}
+  function mk(tag,id){var e=d.createElement(tag);if(id)e.id=id;sky.appendChild(e);return e;}
+  var lampBox=mk('div','lamps'),sevenBox=mk('div','seven'),bar=$('bar');
+  var FX={
+    veil:function(s,ms){veilT=s;later(function(){veilT=0;},ms);},
+    puff:function(n){for(var i=0;i<n;i++)(function(i){later(function(){var e=mk('i');e.className='steam';e.style.left=(30+Math.random()*40)+'vw';e.style.animationDuration=(7+Math.random()*4)+'s';later(function(){e.remove();},11500);},i*420);})(i);},
+    bar:function(){bar.classList.remove('go');void bar.offsetWidth;bar.classList.add('go');},
+    edge:function(v,ms){blueT=v;later(function(){blueT=0;},ms);},
+    blue:function(on){blueHold=on?.85:0;},
+    ring:function(p){p.classList.add('ringed');later(function(){p.classList.remove('ringed');},12000);},
+    lamps:function(n){lampBox.innerHTML='';lampsFor=cur;for(var i=0;i<n;i++){var b=d.createElement('b');lampBox.appendChild(b);(function(b,i){later(function(){b.classList.add('on');},300+i*90);})(b,i);}},
+    flick:function(){var b=lampBox.children[Math.floor(lampBox.children.length/2)];if(b){b.classList.remove('on');void b.offsetWidth;b.classList.add('on','flick');}},
+    seven:function(){sevenBox.innerHTML='<b></b><b></b><b></b><b></b><b></b><b></b><b></b>';later(function(){sevenBox.classList.add('on');},50);later(function(){sevenBox.classList.remove('on');},6500);}
+  };
+  var T=[['The clock struck twelve.','veil',.9,5200],['The only thing in the whole town that moved was steam','puff',14],['A bar of gold lay across the snow','bar'],['They ran. All four of them ran','edge',1,4500],['The clock began to strike.','veil',.5,3200],['gave up wakefulness all at once','veil',.75,5000],['The Hour closed behind them with the Granary','veil',.8,3200],['The Blue was not dark.','blue',1],['They came out through the Lines on the other side','blue',0],['On the fourth, it simply stood.','ring'],['They ran with the carts at a pace','lamps',28],['had coughed','flick'],['stop at seven','seven'],['The door was going.','veil',.9,3600],['thinning to a seam of light, to a thread','veil',1,4600]];
+  var slowRe=/^[“]?(East|Burners|Fast|Burn|Yes|Told|Bread|Them|It wasn|Sit|Show|Slow|Start hard|Door\.|Stand\.|Hour\.)/;
+  var ps=[].slice.call(d.querySelectorAll('main p,header p')),fired={};
+  ps.forEach(function(p){var t=p.textContent.trim();if(t==='Walk.')p.classList.add('walk');else if(t.length<110&&(slowRe.test(t)||/said Isel|Isel said/.test(t)))p.classList.add('slow');});
+  if(reduced||!('IntersectionObserver' in window)){ps.forEach(function(e){e.classList.add('in');});d.querySelectorAll('h2').forEach(function(e){e.classList.add('in');});}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.05});
+    ps.concat([].slice.call(d.querySelectorAll('main h2'))).forEach(function(e){io.observe(e);});
+    var fx=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){fx.unobserve(e.target);var a=e.target._fx;if(!fired[a[0]]){fired[a[0]]=1;FX[a[1]](a[2]===undefined?e.target:a[2],a[3]);}}});},{rootMargin:'-35% 0px -35% 0px',threshold:0});
+    ps.forEach(function(p){for(var i=0;i<T.length;i++){if(p.textContent.indexOf(T[i][0])>-1){p._fx=T[i].slice(0,4);fx.observe(p);break;}}});
+  }
+  /* ambient canvas: weather changes with the chapter; stars in night mode */
+  var cv=$('fx'),cx=cv&&cv.getContext&&cv.getContext('2d'),W=0,H=0,dpr=1,P=[],S=[],cvx=VX[0],cvy=VY[0];
+  function size(){dpr=Math.min(window.devicePixelRatio||1,innerWidth<640?1.25:1.5);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);}
+  function seed(){P=[];S=[];var n=W<640?22:W<1024?44:64,i;for(i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:.5+Math.random()*1.1,ph:Math.random()*6.3,z:Math.random()});for(i=0;i<(W<640?40:W<1024?70:90);i++)S.push({x:Math.random()*W,y:Math.random()*H*.85,ph:Math.random()*6.3,r:(Math.random()*1.2+.3)*(W<640?1.35:1)});}
+  function draw(t,dt){
+    cx.clearRect(0,0,W,H);var k=Math.min(1,dt*.8);cvx+=(VX[cur]-cvx)*k;cvy+=(VY[cur]-cvy)*k;
+    var dk=dark(),col=(dk?DC:LC)[cur],ox=mx*10,oy=my*6,i,p;
+    if(dk){for(i=0;i<S.length;i++){p=S[i];cx.fillStyle='rgba(235,235,255,'+(.2+.4*Math.sin(t*.0008+p.ph)*Math.sin(t*.0008+p.ph)).toFixed(2)+')';cx.beginPath();cx.arc(p.x-ox*.3,p.y-oy*.3,p.r,0,6.3);cx.fill();}}
+    for(i=0;i<P.length;i++){p=P[i];
+      p.x+=(cvx+Math.sin(t*.0004+p.ph)*9)*dt*(.5+p.z);p.y+=cvy*dt*(.5+p.z);
+      if(p.x>W+10)p.x=-10;if(p.x<-10)p.x=W+10;if(p.y>H+10)p.y=-10;if(p.y<-10)p.y=H+10;
+      var a=(dk?.8:.55)*(.45+.55*Math.sin(t*.001+p.ph)*Math.sin(t*.001+p.ph));
+      cx.fillStyle='rgba('+col+','+a.toFixed(2)+')';cx.beginPath();cx.arc(p.x+ox*p.z,p.y+oy*p.z,p.r*SZ[cur]*(.7+p.z),0,6.3);cx.fill();}
+  }
+  if(cx&&!reduced){size();seed();addEventListener('resize',function(){size();seed();});}
+  else if(cv){cv.style.display='none';}
+  var tt=0;
+  addEventListener('pointermove',function(e){root.style.setProperty('--mx',e.clientX+'px');root.style.setProperty('--my',e.clientY+'px');if(e.pointerType==='mouse'){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;}},{passive:true});
+  addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'){root.style.setProperty('--mx',e.clientX+'px');root.style.setProperty('--my',e.clientY+'px');clearTimeout(tt);root.classList.add('touching');}},{passive:true});
+  ['pointerup','pointercancel'].forEach(function(n){addEventListener(n,function(e){if(e.pointerType!=='mouse'){clearTimeout(tt);tt=setTimeout(function(){root.classList.remove('touching');},700);}},{passive:true});});
+  /* scroll speed: measured on scroll events (iPad momentum scrolling doesn't tick reliably in rAF) */
+  function onScroll(){var n=performance.now(),dt=(n-lastST)/1000;if(dt<.003)return;var y=window.pageYOffset;vel+=(Math.abs(y-lastS)/dt-vel)*.4;lastS=y;lastST=n;lastMove=n;}
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('touchmove',onScroll,{passive:true});
+  var navEl=d.querySelector('nav.cairn'),dock=d.createElement('button'),folio=d.createElement('div'),ty=0;
+  dock.id='dock';dock.type='button';dock.setAttribute('aria-label','Chapters');dock.setAttribute('aria-expanded','false');d.body.appendChild(dock);
+  folio.id='folio';folio.setAttribute('aria-hidden','true');d.body.appendChild(folio);
+  function sheet(o){navEl.classList.toggle('open',o);dock.setAttribute('aria-expanded',o);}
+  dock.addEventListener('click',function(){sheet(!navEl.classList.contains('open'));});
+  links.forEach(function(a){a.addEventListener('click',function(){sheet(false);});});
+  d.addEventListener('pointerdown',function(e){if(navEl.classList.contains('open')&&!navEl.contains(e.target)&&e.target!==dock)sheet(false);});
+  navEl.addEventListener('touchstart',function(e){ty=e.touches[0].clientY;},{passive:true});
+  navEl.addEventListener('touchmove',function(e){if(e.touches[0].clientY-ty>60&&navEl.scrollTop<=0)sheet(false);},{passive:true});
+  d.addEventListener('keydown',function(e){if(e.key==='Escape')sheet(false);if(e.metaKey||e.ctrlKey||e.altKey)return;var k=e.key,i=-1;if(k==='ArrowRight'||k==='j')i=cur+1;else if(k==='ArrowLeft'||k==='k')i=cur-1;if(i>=0&&i<secs.length){e.preventDefault();secs[i].scrollIntoView({behavior:reduced?'auto':'smooth'});}});
+  function uiChapter(c){var t=links[c].title.replace(/^\d+\.\s*/,'');dock.textContent=(c+1)+' \u00b7 '+t;folio.textContent=(c+1)+' \u2014 '+t;}
+  function clamp(x){return x<0?0:x>1?1:x;}
+  function layout(y){
+    var m=root.scrollHeight-root.clientHeight,p=m>0?y/m:0;
+    mark.style.left=(p*100)+'%';root.style.setProperty('--pp',(p*100).toFixed(1)+'%');
+    var c=0;secs.forEach(function(s,i){if(s.getBoundingClientRect().top<innerHeight*.4)c=i;});
+    if(c!==cur||lastY<0){cur=c;root.style.setProperty('--tint','rgb('+MOOD[c]+')');root.style.setProperty('--shaftc',SHAFT[c]);links.forEach(function(a,i){a.classList.toggle('cur',i===c);a.classList.toggle('read',i<c);});uiChapter(c);
+      if(lampsFor>-1&&c!==lampsFor){lampBox.innerHTML='';lampsFor=-1;}if(c!==7)blueHold=0;}
+    root.classList.toggle('end',p>.985);
+  }
+  function frame(t){
+    var dt=Math.min((t-lastT)/1000,.1)||.016;lastT=t;
+    var y=window.pageYOffset;if(y!==lastY){lastMove=t;layout(y);}lastY=y;
+    if(t-lastST>90)vel*=Math.pow(.03,dt);
+    if(!reduced){
+      var target=clamp((vel/innerHeight-.45)/1.1);
+      tb=Math.max(target,tb-dt*(.3+(calm>.3?.35:0)));
+      var idle=t-lastMove>2400;
+      calm+=((idle?1:0)-calm)*Math.min(1,dt*(idle?.7:3));
+      veil+=(veilT-veil)*Math.min(1,dt*1.4);
+      burn+=(Math.max(tb,blueHold,blueT)-burn)*Math.min(1,dt*4);
+      root.style.setProperty('--burn',burn.toFixed(3));root.style.setProperty('--calm',calm.toFixed(3));root.style.setProperty('--veil',veil.toFixed(3));
+      if(cx&&!d.hidden)draw(t,dt);
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize',function(){layout(window.pageYOffset);});
+  layout(window.pageYOffset);requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
